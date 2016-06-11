@@ -1,7 +1,7 @@
 package ch.wados.starfury.physics.api;
 
 /**
- * Collection of supported {@link PhysicsEntity PhysicsEntities}.
+ * Collection of supported {@link PhysicsEntity} types.
  * <p>
  * Depending on the used {@link PhysicsManager} implementation this may control
  * the physics core(s) the entity is simulated in or other simulation
@@ -14,7 +14,7 @@ package ch.wados.starfury.physics.api;
  * @version 1.1 - 2016/06/11
  * @since StarFury 0.0.1
  * 
- * @see PhysicsEntity
+ * @see PhysicsEntityDefinition
  * @see PhysicsManager
  */
 public enum EntityType {
