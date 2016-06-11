@@ -3,5 +3,6 @@
 	<classpathentry kind="src" path="src"/>
 	<classpathentry kind="con" path="org.eclipse.jdt.launching.JRE_CONTAINER"/>
 	<classpathentry kind="lib" path="lib/dyn4j-3.2.1.jar" sourcepath="lib/dyn4j-3.2.1-src.zip"/>
+	<classpathentry kind="lib" path="lib/org.eclipse.jdt.annotation_2.0.100.v20150311-1658.jar"/>
 	<classpathentry kind="output" path="bin"/>
 </classpath>
