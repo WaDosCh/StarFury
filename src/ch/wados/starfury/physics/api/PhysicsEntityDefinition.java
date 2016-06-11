@@ -1,7 +1,5 @@
 package ch.wados.starfury.physics.api;
 
-import org.eclipse.jdt.annotation.NonNull;
-
 /**
  * Base interface for all entity definitions for {@link PhysicsEntity
  * PhysicsEntities} involved in physics calculations.
@@ -36,7 +34,7 @@ public interface PhysicsEntityDefinition {
 	 * @return The entity type. May not be {@code null}.
 	 * @see EntityType
 	 */
-	public abstract @NonNull EntityType getEntityType();
+	public abstract EntityType getEntityType();
 
 	// TODO: add methods
 

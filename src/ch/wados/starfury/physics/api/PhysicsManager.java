@@ -1,7 +1,5 @@
 package ch.wados.starfury.physics.api;
 
-import org.eclipse.jdt.annotation.NonNull;
-
 import ch.wados.starfury.physics.exceptions.IllegalPhysicsEntityDefinitionException;
 
 /**
@@ -30,7 +28,7 @@ public interface PhysicsManager {
 	 *             if the initialisation fails due to illegal contents of the
 	 *             definition.
 	 */
-	public abstract @NonNull PhysicsEntity addEntity(@NonNull PhysicsEntityDefinition definition)
+	public abstract PhysicsEntity addEntity(PhysicsEntityDefinition definition)
 			throws IllegalPhysicsEntityDefinitionException;
 
 	// TODO: add methods
