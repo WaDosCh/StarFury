@@ -1,5 +1,9 @@
 package ch.wados.starfury.physics.api;
 
+import java.util.List;
+
+import org.dyn4j.geometry.Convex;
+
 /**
  * Base interface for all entity definitions for {@link PhysicsEntity
  * PhysicsEntities} involved in physics calculations.
@@ -16,7 +20,7 @@ package ch.wados.starfury.physics.api;
  * </p>
  *
  * @author Andreas Wälchli
- * @version 1.1 - 2016/06/11
+ * @version 1.1 - 2016/06/12
  * @since StarFury 0.0.1
  * 
  * @see EntityType
@@ -31,11 +35,26 @@ public interface PhysicsEntityDefinition {
 	 * This method should be consistent and always return the same object for a
 	 * single entity. Otherwise the behaviour may be unpredictable.
 	 * 
-	 * @return The entity type. May not be {@code null}.
+	 * @return The entity type.
 	 * @see EntityType
 	 */
 	public abstract EntityType getEntityType();
 
-	// TODO: add methods
+	/**
+	 * Provides the initial mass of the entity in [kg]. For
+	 * {@link EntityType#STATIC STATIC} entities this value is ignored. For
+	 * normal entities this must be strictly positive.
+	 * 
+	 * @return the initial mass.
+	 * @see EntityType
+	 */
+	public abstract double getInitialMass();
 
+	/**
+	 * Provides a set of convex shapes that represent the entities collision
+	 * hull. These shapes are also used to calculate the moment of inertia.
+	 * 
+	 * @return the shapes the entity is constructed from.
+	 */
+	public abstract List<Convex> getShapes();
 }
