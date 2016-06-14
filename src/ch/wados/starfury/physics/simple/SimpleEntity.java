@@ -142,6 +142,7 @@ class SimpleEntity implements PhysicsEntity {
 		}
 		this.buildFixture(fixture);
 		this.recalculateCoM();
+		this.callback.run();
 	}
 
 	@Override
@@ -254,6 +255,7 @@ class SimpleEntity implements PhysicsEntity {
 		if (fx == null)
 			throw new IllegalArgumentException("fixture not found for id [" + id + "]");
 		this.body.removeFixture(fx);
+		this.callback.run();
 	}
 
 	@Override
@@ -283,12 +285,14 @@ class SimpleEntity implements PhysicsEntity {
 	@Override
 	public void setOrientation(double orientation) {
 		this.body.rotateAboutCenter(orientation - this.getOrientation());
+		this.callback.run();
 	}
 
 	@Override
 	public void setPosition(Vector2 position) {
 		this.body.translateToOrigin();
 		this.body.translate(position);
+		this.callback.run();
 	}
 
 	@Override
@@ -299,6 +303,7 @@ class SimpleEntity implements PhysicsEntity {
 		for (BodyFixture f : this.body.getFixtures())
 			if (id.equals(f.getUserData())) {
 				f.setSensor(isSensor);
+				this.callback.run();
 				return;
 			}
 		throw new IllegalArgumentException("fixture not found for id [" + id + "]");
@@ -348,9 +353,17 @@ class SimpleEntity implements PhysicsEntity {
 		this.body.addFixture(fixture);
 	}
 
+	private final static Runnable NULL_RUNNABLE = () -> {
+	};
+
 	private final Body body;
 	private final ThrusterSystem thrusters;
 	private final EntityType type;
+	private Runnable callback = NULL_RUNNABLE;
+
+	void setCallback(Runnable r) {
+		this.callback = (r == null) ? NULL_RUNNABLE : r;
+	}
 
 	SimpleEntity(PhysicsEntityDefinition def) {
 		Objects.requireNonNull(def);
