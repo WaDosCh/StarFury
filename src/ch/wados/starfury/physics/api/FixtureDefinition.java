@@ -14,18 +14,13 @@ import org.dyn4j.geometry.Convex;
  * density coefficient allows adjustment of the fixture density. The real
  * density is calculated from the entity mass, but the density coefficients of
  * the fixtures determine the mass distribution. If no custom mass distribution
- * is required the default density coefficient of 1 should be used.
- * </p>
- * <p>
- * The default values for the convenience constructors are:
- * <ul>
- * <li>density coefficient: 1</li>
- * <li>id: {@code null} (representing no identifier)</li>
- * </ul>
+ * is required the default density coefficient of 1 should be used. A fixture
+ * can also be defined as a sensor. Collisions with sensors are not resolved,
+ * but detected.
  * </p>
  * 
  * @author Andreas Wälchli
- * @version 1.1 - 2016/06/13
+ * @version 1.1 - 2016/06/14
  * @since StarFury 0.0.1
  */
 public final class FixtureDefinition {
@@ -33,6 +28,7 @@ public final class FixtureDefinition {
 	private final Convex shape;
 	private final double density;
 	private final String id;
+	private final boolean isSensor;
 
 	/**
 	 * Creates a new FixtureDefinition instance for a given shape, density
@@ -42,6 +38,8 @@ public final class FixtureDefinition {
 	 *            the convex shape. May not be {@code null}
 	 * @param density
 	 *            the density coefficient. Must be strictly positive and finite.
+	 * @param isSensor
+	 *            indicates if the fixture is a sensor.
 	 * @param id
 	 *            the identifier string. May be {@code null} if no identifier
 	 *            should be used.
@@ -50,7 +48,7 @@ public final class FixtureDefinition {
 	 * @throws IllegalArgumentException
 	 *             if the {@code density} is negative or not finite.
 	 */
-	public FixtureDefinition(Convex shape, double density, String id) {
+	public FixtureDefinition(Convex shape, double density, boolean isSensor, String id) {
 		if (shape == null)
 			throw new NullPointerException("shape may not be null");
 		if (density <= 0 || !Double.isFinite(density))
@@ -58,27 +56,7 @@ public final class FixtureDefinition {
 		this.shape = shape;
 		this.density = density;
 		this.id = id;
-	}
-
-	/**
-	 * @see #FixtureDefinition(Convex, double, String)
-	 */
-	public FixtureDefinition(Convex shape) {
-		this(shape, 1.0, null);
-	}
-
-	/**
-	 * @see #FixtureDefinition(Convex, double, String)
-	 */
-	public FixtureDefinition(Convex shape, double density) {
-		this(shape, density, null);
-	}
-
-	/**
-	 * @see #FixtureDefinition(Convex, double, String)
-	 */
-	public FixtureDefinition(Convex shape, String id) {
-		this(shape, 1.0, id);
+		this.isSensor = isSensor;
 	}
 
 	public Convex getShape() {
@@ -93,4 +71,7 @@ public final class FixtureDefinition {
 		return this.density;
 	}
 
+	public boolean isSensor() {
+		return this.isSensor;
+	}
 }

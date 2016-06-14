@@ -10,5 +10,6 @@ package ch.wados.starfury.physics.api;
  * @version 1.1 - 2016/06/14
  * @since StarFury 0.0.1
  */
-public interface ListenerRelay extends Listenable, CollisionListener, TimeOfImpactListener, UpdateListener {
+public interface ListenerRelay
+		extends Listenable, CollisionFilter, CollisionListener, TimeOfImpactListener, UpdateListener {
 }
