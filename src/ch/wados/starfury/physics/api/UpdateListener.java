@@ -13,6 +13,6 @@ package ch.wados.starfury.physics.api;
 @FunctionalInterface
 public interface UpdateListener {
 
-	public abstract void update();
+	void update();
 
 }

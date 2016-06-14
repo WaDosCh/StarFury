@@ -1,15 +1,17 @@
 package ch.wados.starfury.physics.api;
 
+import org.dyn4j.geometry.Vector2;
+
 /**
  * A PhysicsManager handles all interaction between the physics engine and all
  * other modules. It serves as an abstraction layer to enable flexible physics
  * implementation changes.
  * 
  * @author Andreas Wälchli
- * @version 1.1 - 2016/06/12
+ * @version 1.1 - 2016/06/14
  * @since StarFury 0.0.1
  */
-public interface PhysicsManager {
+public interface PhysicsManager extends Listenable {
 
 	/**
 	 * Creates a new entity based off the provided
@@ -32,23 +34,7 @@ public interface PhysicsManager {
 	 *             if the initialisation fails due to illegal contents of the
 	 *             definition.
 	 */
-	public abstract PhysicsEntity createEntity(PhysicsEntityDefinition definition);
-
-	/**
-	 * Spawns the given {@link PhysicsEntity} in the world.
-	 * 
-	 * @param entity
-	 *            the entity to spawn. May not be {@code null} or an already
-	 *            spawned entity.
-	 * @throws NullPointerException
-	 *             if the {@code entity} parameter is {@code null}
-	 * @throws IllegalStateException
-	 *             if the {@code entity} is already present in the world
-	 * @throws IllegalArgumentException
-	 *             if the {@code entity} is illegal or unsupported in any other
-	 *             way.
-	 */
-	public abstract void spawnEntity(PhysicsEntity entity);
+	PhysicsEntity createEntity(PhysicsEntityDefinition definition);
 
 	/**
 	 * Despawns the given {@link PhysicsEntity} from the world. The entity
@@ -58,11 +44,131 @@ public interface PhysicsManager {
 	 *            the entity to despawn. May not be {@code null} and the entity
 	 *            must be currently spawned.
 	 * @throws NullPointerException
-	 *             if the {@code entity} parameter is {@code null}
+	 *             if the {@code entity} parameter is {@code null}.
 	 * @throws IllegalStateException
-	 *             if the {@code entity} is not present in the world
+	 *             if the {@code entity} is not present in the world.
+	 * @throws IllegalStateException
+	 *             if the world has not been initialised.
 	 */
-	public abstract void despawnEntity(PhysicsEntity entity);
+	void despawnEntity(PhysicsEntity entity);
 
-	// TODO: add methods
+	/**
+	 * @return the world gravity.
+	 * 
+	 * @throws IllegalStateException
+	 *             if the world is not initialised.
+	 */
+	Vector2 getGravity();
+
+	/**
+	 * Initialises the internal physics engine with a given gravity vector and a
+	 * predefined default capacity. By default this capacity is 32.
+	 * 
+	 * @param gravity
+	 *            the gravity vector. May not be {@code null}. Use the zero
+	 *            vector if no gravity is wanted.
+	 * @throws NullPointerException
+	 *             if the {@code gravity} is {@code null}.
+	 * @throws IllegalStateException
+	 *             if the world has already been initialised.
+	 * 
+	 * @see #initialiseWorld(Vector2, int)
+	 */
+	default void initialiseWorld(Vector2 gravity) {
+		this.initialiseWorld(gravity, 32);
+	}
+
+	/**
+	 * Initialises the internal physics engine with a given gravity vector and
+	 * initial capacity. This initial capacity can be exceeded at any time, it
+	 * only serves as an optimisation possibility to reduce list expansion
+	 * overhead.
+	 * 
+	 * @param gravity
+	 *            the gravity vector. May not be {@code null}. Use the zero
+	 *            vector if no gravity is wanted.
+	 * @param initialCapacity
+	 *            the initial capacity of the world. Must be strictly positive.
+	 * @throws NullPointerException
+	 *             if the {@code gravity} is {@code null}.
+	 * @throws IllegalArgumentException
+	 *             if the {@code initialCapacity} is less than or equal to zero.
+	 * @throws IllegalStateException
+	 *             if the world has already been initialised.
+	 */
+	void initialiseWorld(Vector2 gravity, int initialCapacity);
+
+	/**
+	 * Sets the world gravity.
+	 * 
+	 * @param gravity
+	 *            the gravity vector. May not be {@code null}. If no gravity is
+	 *            wanted use the zero vector.
+	 * @throws NullPointerException
+	 *             if the {@code gravity} is {@code null}.
+	 * @throws IllegalStateException
+	 *             if the world is not initialised.
+	 */
+	void setGravity(Vector2 gravity);
+
+	/**
+	 * Spawns the given {@link PhysicsEntity} in the world.
+	 * 
+	 * @param entity
+	 *            the entity to spawn. May not be {@code null} or an already
+	 *            spawned entity.
+	 * @throws NullPointerException
+	 *             if the {@code entity} parameter is {@code null}.
+	 * @throws IllegalStateException
+	 *             if the {@code entity} is already present in the world.
+	 * @throws IllegalArgumentException
+	 *             if the {@code entity} is illegal or unsupported in any other
+	 *             way.
+	 * @throws IllegalStateException
+	 *             if the world has not been initialised.
+	 */
+	void spawnEntity(PhysicsEntity entity);
+
+	/**
+	 * Performs a single physics step of a given length. Best results are
+	 * achieved if steps of a small and constant size are used.
+	 * 
+	 * @param stepTime
+	 *            the step duration in seconds. Must be strictly positive and
+	 *            finite.
+	 * @throws IllegalArgumentException
+	 *             if the stepTime is not positive or non-finite.
+	 * @throws IllegalStateException
+	 *             if the world is not initialised.
+	 */
+	void stepWorld(double stepTime);
+
+	/**
+	 * Performs a series of physics steps. The {@code totalTime} is divided into
+	 * a given number of {@code substeps} of equal size. In essence this is a
+	 * convenience method for covering multiple steps in a single method call.
+	 * The same result could be achieved by calling {@link #stepWorld(double)}
+	 * {@code substeps} number of times with
+	 * {@code stepTime = totalTime / substeps}.
+	 * 
+	 * @param totalTime
+	 *            the total duration over all steps in seconds. Must be strictly
+	 *            positive and finite.
+	 * @param substeps
+	 *            the number of substeps the {@code totalTime} should be divided
+	 *            over.
+	 * @throws IllegalArgumentException
+	 *             if the {@totalTime} or {@code substeps} argument is not
+	 *             strictly positive or non-finite.
+	 * @throws IllegalStateException
+	 *             if the world is not initialised.
+	 */
+	default void stepWorld(double totalTime, int substeps) {
+		if (substeps <= 0)
+			throw new IllegalArgumentException("substep count must be positive");
+		final double stepTime = totalTime / substeps;
+		for (int i = 0; i < substeps; i++)
+			stepWorld(stepTime);
+	}
+
 }

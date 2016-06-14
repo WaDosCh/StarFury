@@ -18,7 +18,7 @@ import org.dyn4j.geometry.Vector2;
  * </p>
  * 
  * @author Andreas Wälchli
- * @version 1.1 - 2016/06/13
+ * @version 1.1 - 2016/06/14
  * @since StarFury 0.0.1
  */
 public final class ThrustPointDefinition {
@@ -37,40 +37,28 @@ public final class ThrustPointDefinition {
 	 *            the thrust direction. May not be {@code null} or the zero
 	 *            vector.
 	 * @param id
-	 *            an (optional) identifier
+	 *            an identifier. May not be {@code null} or an String.
 	 * @throws NullPointerException
-	 *             if the {@code position} or {@code direction} is {@code null}.
+	 *             if the {@code position}, {@code direction} or {@code id} is
+	 *             {@code null}.
 	 * @throws IllegalArgumentException
-	 *             if the {@code direction} vector is the zero vector.
+	 *             if the {@code direction} vector is the zero vector or if the
+	 *             {@code id} is an empty String.
 	 */
 	public ThrustPointDefinition(Vector2 position, Vector2 direction, String id) {
 		if (position == null)
 			throw new NullPointerException("position may not be null");
 		if (direction == null)
 			throw new NullPointerException("direction may not be null");
+		if (id == null)
+			throw new NullPointerException("id may not be null");
 		if (direction.isZero())
 			throw new IllegalArgumentException("direction may not be the zero vector");
+		if (id.isEmpty())
+			throw new IllegalArgumentException("id may not be empty");
 		this.position = new Vector2(position);
 		this.direction = direction.getNormalized();
 		this.id = id;
-	}
-
-	/**
-	 * Creates a new ThrustPointDefinition instance from a given position and
-	 * direction.
-	 * 
-	 * @param position
-	 *            the thrust-point position. May not be {@code null}.
-	 * @param direction
-	 *            the thrust direction. May not be {@code null} or the zero
-	 *            vector.
-	 * @throws NullPointerException
-	 *             if the {@code position} or {@code direction} is {@code null}.
-	 * @throws IllegalArgumentException
-	 *             if the {@code direction} vector is the zero vector.
-	 */
-	public ThrustPointDefinition(Vector2 position, Vector2 direction) {
-		this(position, direction, null);
 	}
 
 	public Vector2 getPosition() {

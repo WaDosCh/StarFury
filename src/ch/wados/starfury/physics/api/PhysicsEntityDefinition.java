@@ -43,9 +43,9 @@ public final class PhysicsEntityDefinition {
 	 * @throws NullPointerException
 	 *             if {@code type} or {@code position} is {@code null}.
 	 * @throws IllegalArgumentException
-	 *             if {@code mass} is negative
+	 *             if {@code mass} is negative.
 	 * @throws IllegalArgumentException
-	 *             if {@code orientation} is non-finite
+	 *             if {@code orientation} is non-finite.
 	 */
 	public PhysicsEntityDefinition(EntityType type, double mass, Vector2 position, double orientation) {
 		// validate input
@@ -66,11 +66,11 @@ public final class PhysicsEntityDefinition {
 	}
 
 	/**
-	 * adds a fixture.
+	 * Adds a fixture.
 	 * 
 	 * @param fixture
-	 *            the fixture to add. May not be {@code null}
-	 * @return itself (for chaining)
+	 *            the fixture to add. May not be {@code null}.
+	 * @return itself (for chaining).
 	 * @throws NullPointerException
 	 *             if {@code fixture} is {@code null}.
 	 * @throws IllegalArgumentException
@@ -90,11 +90,11 @@ public final class PhysicsEntityDefinition {
 	}
 
 	/**
-	 * adds a thrust point.
+	 * Adds a thrust point.
 	 * 
 	 * @param thrustpoint
-	 *            the thrust point to add. May not be {@code null}
-	 * @return itself (for chaining)
+	 *            the thrust point to add. May not be {@code null}.
+	 * @return itself (for chaining).
 	 * @throws NullPointerException
 	 *             if {@code fixture} is {@code null}.
 	 * @throws IllegalArgumentException

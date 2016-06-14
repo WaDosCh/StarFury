@@ -1,16 +1,17 @@
 package ch.wados.starfury.physics.api;
 
 /**
- * Whenever a collision is detected through CCD a {@link TimeOfImpact} event is
- * created. All registered TimeOfImpactListeners will be invoked. Since the
- * invocation takes place during the physics calculations, the world must not be
- * altered. It is recommended to buffer any required changes and to perform them
- * through an {@link UpdateListener}.
+ * Whenever a collision is detected through CCD a TimeOfImpact event is created.
+ * All registered TimeOfImpactListeners will be invoked. Since the invocation
+ * takes place during the physics calculations, the world must not be altered.
+ * It is recommended to buffer any required changes and to perform them through
+ * an {@link UpdateListener}.
  * <p>
  * All TimeOfImpactListeners also act as collision detection filters for CCD. If
  * any filter returns {@code false} the collision will not be resolved. This
  * does however not prevent the discrete collision detection to resolve the
- * collision if it finds it.
+ * collision if it finds it. Resolved TimeOfImpact events will be detected by
+ * the discrete collision detection in the subsequent collision step.
  * </p>
  * 
  * @author Andreas Wälchli
@@ -29,11 +30,11 @@ public interface TimeOfImpactListener {
 	 * {@code true}.
 	 * 
 	 * @param entity0
-	 *            the first entity involved in the collision
+	 *            the first entity involved in the collision.
 	 * @param fixture0
 	 *            the identifier of the involved fixture of {@code entity0}.
 	 * @param entity1
-	 *            the second entity involved in the collision
+	 *            the second entity involved in the collision.
 	 * @param fixture1
 	 *            the identifier of the involved fixture of {@code entity1}.
 	 * 
@@ -45,7 +46,6 @@ public interface TimeOfImpactListener {
 	 *         if it should be ignored. By default {@code true} should be
 	 *         returned.
 	 */
-	public abstract boolean collision(PhysicsEntity entity0, String fixture0, PhysicsEntity entity1, String fixture1,
-			double toi);
+	boolean collision(PhysicsEntity entity0, String fixture0, PhysicsEntity entity1, String fixture1, double toi);
 
 }

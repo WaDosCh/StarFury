@@ -22,6 +22,10 @@ import org.dyn4j.geometry.Convex;
  * @author Andreas Wälchli
  * @version 1.1 - 2016/06/14
  * @since StarFury 0.0.1
+ * 
+ * @see Convex
+ * @see PhysicsEntity
+ * @see CollisionListener
  */
 public final class FixtureDefinition {
 
@@ -35,24 +39,29 @@ public final class FixtureDefinition {
 	 * coefficient and identifier.
 	 * 
 	 * @param shape
-	 *            the convex shape. May not be {@code null}
+	 *            the convex shape. May not be {@code null}.
 	 * @param density
 	 *            the density coefficient. Must be strictly positive and finite.
 	 * @param isSensor
 	 *            indicates if the fixture is a sensor.
 	 * @param id
 	 *            the identifier string. May be {@code null} if no identifier
-	 *            should be used.
+	 *            should be used. May not be an empty String.
 	 * @throws NullPointerException
 	 *             if the {@code shape} parameter is {@code null}.
 	 * @throws IllegalArgumentException
-	 *             if the {@code density} is negative or not finite.
+	 *             if the {@code density} is negative or not finite or the
+	 *             {@code id} is an empty String.
 	 */
 	public FixtureDefinition(Convex shape, double density, boolean isSensor, String id) {
+		// validate
 		if (shape == null)
 			throw new NullPointerException("shape may not be null");
 		if (density <= 0 || !Double.isFinite(density))
 			throw new IllegalArgumentException("density coefficient must be strictly positive. Was " + density);
+		if (id != null && id.isEmpty())
+			throw new IllegalArgumentException("id may not be an empty String. use null instead");
+		// apply values
 		this.shape = shape;
 		this.density = density;
 		this.id = id;

@@ -2,12 +2,12 @@ package ch.wados.starfury.physics.api;
 
 /**
  * Base Interface for all classes that physics engine listeners and filters can
- * be registered on. These are
+ * be registered on. These listeners and filters are
  * </ul>
- * <li>{@link CollisionFilter}</li>
- * <li>{@link CollisionListener}</li>
- * <li>{@link TimeOfImpactListener}</li>
- * <li>{@link UpdateListener}</li>
+ * <li>{@link CollisionFilter} for broad-phase elimination of unwanted collisions</li>
+ * <li>{@link CollisionListener} for detecting collisions resolved through the narrow-phase</li>
+ * <li>{@link TimeOfImpactListener} for detection of collisions resolved through CCD</li>
+ * <li>{@link UpdateListener} for performing updates directly after a physics step</li>
  * </ul>
  * <p>
  * If any method is invoked with a {@code null} parameter, a
@@ -21,20 +21,20 @@ package ch.wados.starfury.physics.api;
  */
 public interface Listenable {
 
-	public abstract void addCollisionFilter(CollisionFilter filter);
+	void addCollisionFilter(CollisionFilter filter);
 
-	public abstract void addCollisionListener(CollisionListener listener);
+	void addCollisionListener(CollisionListener listener);
 
-	public abstract void addTimeOfImpactListener(TimeOfImpactListener listener);
+	void addTimeOfImpactListener(TimeOfImpactListener listener);
 
-	public abstract void addUpdateListener(UpdateListener listener);
+	void addUpdateListener(UpdateListener listener);
 
-	public abstract void removeCollisionFilter(CollisionFilter filter);
+	void removeCollisionFilter(CollisionFilter filter);
 
-	public abstract void removeCollisionListener(CollisionListener listener);
+	void removeCollisionListener(CollisionListener listener);
 
-	public abstract void removeTimeOfImpactListener(TimeOfImpactListener listener);
+	void removeTimeOfImpactListener(TimeOfImpactListener listener);
 
-	public abstract void removeUpdateListener(UpdateListener listener);
+	void removeUpdateListener(UpdateListener listener);
 
 }

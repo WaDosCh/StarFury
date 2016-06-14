@@ -2,7 +2,7 @@ package ch.wados.starfury.physics.api;
 
 /**
  * Whenever a collision is detected and resolved through dynamic collision
- * detection a {@link CollisionPoint} is created. All registered
+ * detection, a {@link CollisionPoint} is created. All registered
  * CollisionListeners will be invoked. Since the invocation takes place during
  * the physics calculations, the world must not be altered. It is recommended to
  * buffer any required changes and to perform them through an
@@ -11,6 +11,9 @@ package ch.wados.starfury.physics.api;
  * @author Andreas Wälchli
  * @version 1.1 - 2016/06/14
  * @since StarFury 0.0.1
+ * 
+ * @see CollisionPoint
+ * @see UpdateListener
  */
 @FunctionalInterface
 public interface CollisionListener {
@@ -22,6 +25,6 @@ public interface CollisionListener {
 	 * @param collision
 	 *            the {@link CollisionPoint} data
 	 */
-	public abstract void collision(CollisionPoint collision);
+	void collision(CollisionPoint collision);
 
 }

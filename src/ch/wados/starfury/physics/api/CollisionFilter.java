@@ -1,8 +1,8 @@
 package ch.wados.starfury.physics.api;
 
 /**
- * Collision filters are used to eliminate all collisions, that should be
- * ignored early in the broad-phase scan.
+ * Collision filters are used to eliminate all collisions that should be ignored
+ * early in the broad-phase scan.
  * <p>
  * If any filter returns {@code false} for a given collision pair, that pair
  * will be ignored. Therefore by default {@code true} should be returned.
@@ -30,7 +30,6 @@ public interface CollisionFilter {
 	 * @return {@code true} if the collision should be checked, {@code false}
 	 *         otherwise. By default this should return {@code true}.
 	 */
-	public abstract boolean filterCollision(PhysicsEntity entity0, String fixture0, PhysicsEntity entity1,
-			String fixture1);
+	boolean filterCollision(PhysicsEntity entity0, String fixture0, PhysicsEntity entity1, String fixture1);
 
 }
