@@ -356,7 +356,7 @@ class SimpleEntity implements PhysicsEntity {
 	private final static Runnable NULL_RUNNABLE = () -> {
 	};
 
-	private final Body body;
+	final Body body;
 	private final ThrusterSystem thrusters;
 	private final EntityType type;
 	private Runnable callback = NULL_RUNNABLE;
