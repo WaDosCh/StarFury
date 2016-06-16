@@ -43,7 +43,7 @@ public final class FixtureDefinition {
 	 * @param shape
 	 *            the convex shape. May not be {@code null}.
 	 * @param density
-	 *            the density coefficient. Must be strictly positive and finite.
+	 *            the density coefficient. Must be positive and finite.
 	 * @param friction
 	 *            the friction coefficient. Must be positive or zero and finite.
 	 * @param restitution
@@ -66,7 +66,7 @@ public final class FixtureDefinition {
 		// validate
 		if (shape == null)
 			throw new NullPointerException("shape may not be null");
-		if (density <= 0 || !Double.isFinite(density))
+		if (density < 0 || !Double.isFinite(density))
 			throw new IllegalArgumentException("density coefficient must be strictly positive. Was " + density);
 		if (friction < 0 || !Double.isFinite(friction))
 			throw new IllegalArgumentException("friction coefficient must be positive. Was " + density);
