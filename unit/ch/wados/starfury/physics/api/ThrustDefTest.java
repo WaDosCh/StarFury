@@ -7,6 +7,12 @@ import org.junit.Rule;
 import org.junit.Test;
 import org.junit.rules.ExpectedException;
 
+/**
+ * Tests for {@link ThrustPointDefinition}
+ * 
+ * @author Andreas Wälchli
+ * @version 1.1 - 2016-06-17
+ */
 public class ThrustDefTest {
 
 	@Rule

@@ -18,7 +18,7 @@ import org.dyn4j.geometry.Vector2;
  * </p>
  * 
  * @author Andreas Wälchli
- * @version 1.1 - 2016/06/14
+ * @version 1.2 - 2016/06/17
  * @since StarFury 0.0.1
  */
 public final class ThrustPointDefinition {
@@ -73,6 +73,11 @@ public final class ThrustPointDefinition {
 		return this.id;
 	}
 
+	/**
+	 * {@inheritDoc}
+	 * 
+	 * @since 1.2 (StarFury 0.0.1)
+	 */
 	@Override
 	public int hashCode() {
 		final int prime = 31;
@@ -83,6 +88,11 @@ public final class ThrustPointDefinition {
 		return result;
 	}
 
+	/**
+	 * {@inheritDoc}
+	 * 
+	 * @since 1.2 (StarFury 0.0.1)
+	 */
 	@Override
 	public boolean equals(Object obj) {
 		if (this == obj)

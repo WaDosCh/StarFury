@@ -20,7 +20,7 @@ import org.dyn4j.geometry.Convex;
  * </p>
  * 
  * @author Andreas Wälchli
- * @version 1.1 - 2016/06/14
+ * @version 1.2 - 2016/06/17
  * @since StarFury 0.0.1
  * 
  * @see Convex
@@ -107,6 +107,11 @@ public final class FixtureDefinition {
 		return this.restitution;
 	}
 
+	/**
+	 * {@inheritDoc}
+	 * 
+	 * @since 1.2 (StarFury 0.0.1)
+	 */
 	@Override
 	public int hashCode() {
 		final int prime = 31;
@@ -124,6 +129,11 @@ public final class FixtureDefinition {
 		return result;
 	}
 
+	/**
+	 * {@inheritDoc}
+	 * 
+	 * @since 1.2 (StarFury 0.0.1)
+	 */
 	@Override
 	public boolean equals(Object obj) {
 		if (this == obj)

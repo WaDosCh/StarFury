@@ -12,7 +12,7 @@ import org.dyn4j.geometry.Vector2;
  * construction of multiple entities.
  * 
  * @author Andreas Wälchli
- * @version 1.1 - 2016/06/13
+ * @version 1.2 - 2016/06/17
  * @since StarFury 0.0.1
  */
 public final class PhysicsEntityDefinition {
@@ -139,6 +139,18 @@ public final class PhysicsEntityDefinition {
 		return this.thrustpoints;
 	}
 
+	/**
+	 * The {@code hashCode} is not depending on the fixture and thrustPoint
+	 * lists. Therefore if 2 {@code PhysicsEntityDefinitions} have the same
+	 * parameters except for the fixture and thrustPoint lists, they will have
+	 * the same hash. This also implies that adding fixtures or thrustPoints to
+	 * an existing {@code PhysicsEntityDefinition} does not change its hash -
+	 * useful if they are managed in hash maps.
+	 * 
+	 * {@inheritDoc}
+	 * 
+	 * @since 1.2 (StarFury 0.0.1)
+	 */
 	@Override
 	public int hashCode() {
 		final int prime = 31;
@@ -153,6 +165,11 @@ public final class PhysicsEntityDefinition {
 		return result;
 	}
 
+	/**
+	 * {@inheritDoc}
+	 * 
+	 * @since 1.2 (StarFury 0.0.1)
+	 */
 	@Override
 	public boolean equals(Object obj) {
 		if (this == obj)

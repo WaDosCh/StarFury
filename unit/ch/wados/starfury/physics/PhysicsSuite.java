@@ -6,6 +6,9 @@ import org.junit.runners.Suite.SuiteClasses;
 
 import ch.wados.starfury.physics.api.APISuite;
 
+/**
+ * Suite combining all physics related suites
+ */
 @RunWith(Suite.class)
 @SuiteClasses(APISuite.class)
 public class PhysicsSuite {
