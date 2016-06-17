@@ -53,4 +53,29 @@ public class ThrustDefTest {
 		new ThrustPointDefinition(new Vector2(0, 0), new Vector2(1, 2), "");
 	}
 
+	@Test
+	public void contentEquality() {
+		ThrustPointDefinition point_0 = new ThrustPointDefinition(new Vector2(0, 1), new Vector2(2, 3), "point");
+		ThrustPointDefinition point_1 = new ThrustPointDefinition(new Vector2(0, 1), new Vector2(4, 6), "point");
+		ThrustPointDefinition point_2 = new ThrustPointDefinition(new Vector2(0, 2), new Vector2(2, 3), "point");
+		ThrustPointDefinition point_3 = new ThrustPointDefinition(new Vector2(0, 2), new Vector2(2, 4), "point");
+		ThrustPointDefinition point_4 = new ThrustPointDefinition(new Vector2(0, 2), new Vector2(2, 4), "another");
+		// check equalities. stretching the direction should still equal.
+		// All others should not.
+		assertEquals(point_0, point_1);
+		assertNotEquals(point_1, point_2);
+		assertNotEquals(point_2, point_3);
+		assertNotEquals(point_3, point_4);
+	}
+
+	@Test
+	public void hashEquality() {
+		ThrustPointDefinition point_0 = new ThrustPointDefinition(new Vector2(0, 1), new Vector2(2, 3), "point");
+		ThrustPointDefinition point_1 = new ThrustPointDefinition(new Vector2(0, 1), new Vector2(4, 6), "point");
+		ThrustPointDefinition point_2 = new ThrustPointDefinition(new Vector2(0, 2), new Vector2(2, 3), "point");
+		// 0 and 1 should have same hash, 1 and 2 not
+		assertEquals(point_0.hashCode(), point_1.hashCode());
+		assertNotEquals(point_1.hashCode(), point_2.hashCode());
+	}
+
 }

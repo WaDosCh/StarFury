@@ -96,4 +96,37 @@ public class FixtureDefTest {
 		new FixtureDefinition(getPoly(), 2, 0.5, 0.5, false, "");
 	}
 
+	@Test
+	public void contentEquality() {
+		FixtureDefinition fix_0 = new FixtureDefinition(getPoly(), 2, 0.5, 0.4, false, "hi");
+		FixtureDefinition fix_1 = new FixtureDefinition(getPoly(), 2, 0.5, 0.4, false, "hi");
+		FixtureDefinition fix_2 = new FixtureDefinition(getPoly(), 1, 0.5, 0.4, false, "hi");
+		FixtureDefinition fix_3 = new FixtureDefinition(getPoly(), 1, 0.4, 0.4, false, "hi");
+		FixtureDefinition fix_4 = new FixtureDefinition(getPoly(), 1, 0.4, 0.3, false, "hi");
+		FixtureDefinition fix_5 = new FixtureDefinition(getPoly(), 1, 0.4, 0.2, false, "hi");
+		FixtureDefinition fix_6 = new FixtureDefinition(getPoly(), 1, 0.4, 0.2, true, "hi");
+		FixtureDefinition fix_7 = new FixtureDefinition(getPoly(), 1, 0.4, 0.2, true, null);
+		FixtureDefinition fix_8 = new FixtureDefinition(
+				new Polygon(new Vector2(0, 0), new Vector2(1, 0), new Vector2(0, 1)), 1, 0.4, 0.2, true, null);
+		// check equalities fix_0 and fix_1 are equal, all others not
+		assertEquals(fix_0, fix_1);
+		assertNotEquals(fix_1, fix_2);
+		assertNotEquals(fix_2, fix_3);
+		assertNotEquals(fix_3, fix_4);
+		assertNotEquals(fix_4, fix_5);
+		assertNotEquals(fix_5, fix_6);
+		assertNotEquals(fix_6, fix_7);
+		assertNotEquals(fix_7, fix_8);
+	}
+
+	@Test
+	public void hashEquality() {
+		FixtureDefinition fix_0 = new FixtureDefinition(getPoly(), 2, 0.5, 0.4, false, "hi");
+		FixtureDefinition fix_1 = new FixtureDefinition(getPoly(), 2, 0.5, 0.4, false, "hi");
+		FixtureDefinition fix_2 = new FixtureDefinition(getPoly(), 1, 0.5, 0.4, false, "hi");
+		// 0 == 1, 0 != 1
+		assertEquals(fix_0.hashCode(), fix_1.hashCode());
+		assertNotEquals(fix_1.hashCode(), fix_2.hashCode());
+	}
+
 }

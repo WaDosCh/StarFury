@@ -5,6 +5,6 @@ import org.junit.runners.Suite;
 import org.junit.runners.Suite.SuiteClasses;
 
 @RunWith(Suite.class)
-@SuiteClasses({ ThrustDefTest.class, FixtureDefTest.class })
+@SuiteClasses({ ThrustDefTest.class, FixtureDefTest.class, PhysicsEntityDefTest.class })
 public class APISuite {
 }
