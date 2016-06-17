@@ -55,6 +55,8 @@ public final class PhysicsEntityDefinition {
 			throw new IllegalArgumentException("mass must be non-negative and finite");
 		if (!Double.isFinite(orientation))
 			throw new IllegalArgumentException("orientation must be finite");
+		if (position == null)
+			throw new NullPointerException("position may not be null");
 		// copy finals
 		this.type = type;
 		this.mass = mass;
@@ -135,6 +137,53 @@ public final class PhysicsEntityDefinition {
 
 	public List<ThrustPointDefinition> getThrustPoints() {
 		return this.thrustpoints;
+	}
+
+	@Override
+	public int hashCode() {
+		final int prime = 31;
+		int result = 1;
+		long temp;
+		temp = Double.doubleToLongBits(mass);
+		result = prime * result + (int) (temp ^ (temp >>> 32));
+		temp = Double.doubleToLongBits(orientation);
+		result = prime * result + (int) (temp ^ (temp >>> 32));
+		result = prime * result + ((position == null) ? 0 : position.hashCode());
+		result = prime * result + ((type == null) ? 0 : type.hashCode());
+		return result;
+	}
+
+	@Override
+	public boolean equals(Object obj) {
+		if (this == obj)
+			return true;
+		if (obj == null)
+			return false;
+		if (getClass() != obj.getClass())
+			return false;
+		PhysicsEntityDefinition other = (PhysicsEntityDefinition) obj;
+		if (fixtures == null) {
+			if (other.fixtures != null)
+				return false;
+		} else if (!fixtures.equals(other.fixtures))
+			return false;
+		if (Double.doubleToLongBits(mass) != Double.doubleToLongBits(other.mass))
+			return false;
+		if (Double.doubleToLongBits(orientation) != Double.doubleToLongBits(other.orientation))
+			return false;
+		if (position == null) {
+			if (other.position != null)
+				return false;
+		} else if (!position.equals(other.position))
+			return false;
+		if (thrustpoints == null) {
+			if (other.thrustpoints != null)
+				return false;
+		} else if (!thrustpoints.equals(other.thrustpoints))
+			return false;
+		if (type != other.type)
+			return false;
+		return true;
 	}
 
 }

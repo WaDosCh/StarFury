@@ -106,4 +106,52 @@ public final class FixtureDefinition {
 	public double getRestitutionCoefficient() {
 		return this.restitution;
 	}
+
+	@Override
+	public int hashCode() {
+		final int prime = 31;
+		int result = 1;
+		long temp;
+		temp = Double.doubleToLongBits(density);
+		result = prime * result + (int) (temp ^ (temp >>> 32));
+		temp = Double.doubleToLongBits(friction);
+		result = prime * result + (int) (temp ^ (temp >>> 32));
+		result = prime * result + ((id == null) ? 0 : id.hashCode());
+		result = prime * result + (isSensor ? 1231 : 1237);
+		temp = Double.doubleToLongBits(restitution);
+		result = prime * result + (int) (temp ^ (temp >>> 32));
+		result = prime * result + ((shape == null) ? 0 : shape.hashCode());
+		return result;
+	}
+
+	@Override
+	public boolean equals(Object obj) {
+		if (this == obj)
+			return true;
+		if (obj == null)
+			return false;
+		if (getClass() != obj.getClass())
+			return false;
+		FixtureDefinition other = (FixtureDefinition) obj;
+		if (Double.doubleToLongBits(density) != Double.doubleToLongBits(other.density))
+			return false;
+		if (Double.doubleToLongBits(friction) != Double.doubleToLongBits(other.friction))
+			return false;
+		if (id == null) {
+			if (other.id != null)
+				return false;
+		} else if (!id.equals(other.id))
+			return false;
+		if (isSensor != other.isSensor)
+			return false;
+		if (Double.doubleToLongBits(restitution) != Double.doubleToLongBits(other.restitution))
+			return false;
+		if (shape == null) {
+			if (other.shape != null)
+				return false;
+		} else if (!shape.equals(other.shape))
+			return false;
+		return true;
+	}
+
 }

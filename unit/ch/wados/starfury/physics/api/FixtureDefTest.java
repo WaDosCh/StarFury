@@ -98,14 +98,15 @@ public class FixtureDefTest {
 
 	@Test
 	public void contentEquality() {
-		FixtureDefinition fix_0 = new FixtureDefinition(getPoly(), 2, 0.5, 0.4, false, "hi");
-		FixtureDefinition fix_1 = new FixtureDefinition(getPoly(), 2, 0.5, 0.4, false, "hi");
-		FixtureDefinition fix_2 = new FixtureDefinition(getPoly(), 1, 0.5, 0.4, false, "hi");
-		FixtureDefinition fix_3 = new FixtureDefinition(getPoly(), 1, 0.4, 0.4, false, "hi");
-		FixtureDefinition fix_4 = new FixtureDefinition(getPoly(), 1, 0.4, 0.3, false, "hi");
-		FixtureDefinition fix_5 = new FixtureDefinition(getPoly(), 1, 0.4, 0.2, false, "hi");
-		FixtureDefinition fix_6 = new FixtureDefinition(getPoly(), 1, 0.4, 0.2, true, "hi");
-		FixtureDefinition fix_7 = new FixtureDefinition(getPoly(), 1, 0.4, 0.2, true, null);
+		Convex poly = getPoly();
+		FixtureDefinition fix_0 = new FixtureDefinition(poly, 2, 0.5, 0.4, false, "hi");
+		FixtureDefinition fix_1 = new FixtureDefinition(poly, 2, 0.5, 0.4, false, "hi");
+		FixtureDefinition fix_2 = new FixtureDefinition(poly, 1, 0.5, 0.4, false, "hi");
+		FixtureDefinition fix_3 = new FixtureDefinition(poly, 1, 0.4, 0.4, false, "hi");
+		FixtureDefinition fix_4 = new FixtureDefinition(poly, 1, 0.4, 0.3, false, "hi");
+		FixtureDefinition fix_5 = new FixtureDefinition(poly, 1, 0.4, 0.2, false, "hi");
+		FixtureDefinition fix_6 = new FixtureDefinition(poly, 1, 0.4, 0.2, true, "hi");
+		FixtureDefinition fix_7 = new FixtureDefinition(poly, 1, 0.4, 0.2, true, null);
 		FixtureDefinition fix_8 = new FixtureDefinition(
 				new Polygon(new Vector2(0, 0), new Vector2(1, 0), new Vector2(0, 1)), 1, 0.4, 0.2, true, null);
 		// check equalities fix_0 and fix_1 are equal, all others not
@@ -121,9 +122,10 @@ public class FixtureDefTest {
 
 	@Test
 	public void hashEquality() {
-		FixtureDefinition fix_0 = new FixtureDefinition(getPoly(), 2, 0.5, 0.4, false, "hi");
-		FixtureDefinition fix_1 = new FixtureDefinition(getPoly(), 2, 0.5, 0.4, false, "hi");
-		FixtureDefinition fix_2 = new FixtureDefinition(getPoly(), 1, 0.5, 0.4, false, "hi");
+		Convex poly = getPoly();
+		FixtureDefinition fix_0 = new FixtureDefinition(poly, 2, 0.5, 0.4, false, "hi");
+		FixtureDefinition fix_1 = new FixtureDefinition(poly, 2, 0.5, 0.4, false, "hi");
+		FixtureDefinition fix_2 = new FixtureDefinition(poly, 1, 0.5, 0.4, false, "hi");
 		// 0 == 1, 0 != 1
 		assertEquals(fix_0.hashCode(), fix_1.hashCode());
 		assertNotEquals(fix_1.hashCode(), fix_2.hashCode());

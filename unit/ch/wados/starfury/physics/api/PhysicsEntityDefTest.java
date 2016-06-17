@@ -103,7 +103,7 @@ public class PhysicsEntityDefTest {
 		FixtureDefinition fix_0 = new FixtureDefinition(
 				new Polygon(new Vector2(0, 0), new Vector2(1, 0), new Vector2(0, 1)), 1, 0.5, 0.5, true, "fix_0");
 		FixtureDefinition fix_1 = new FixtureDefinition(
-				new Polygon(new Vector2(0.5, 0), new Vector2(1, 0), new Vector2(0, 1)), 1, 0.5, 0.5, true, "fix_0");
+				new Polygon(new Vector2(0.5, 0), new Vector2(1, 0), new Vector2(0, 1)), 1, 0.5, 0.5, true, "fix_1");
 		assertEquals(def_0, def_1);
 		assertNotEquals(fix_0, fix_1);
 		// add fix_0 to def_0
