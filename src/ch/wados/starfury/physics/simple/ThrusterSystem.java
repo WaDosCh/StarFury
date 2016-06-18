@@ -151,6 +151,7 @@ class ThrusterSystem {
 		for (int i = 0; i < this.thrusters.size(); i++)
 			if (this.thrusters.get(i).identifier.equals(id)) {
 				this.thrusters.remove(i);
+				this.refresh();
 				return;
 			}
 	}
