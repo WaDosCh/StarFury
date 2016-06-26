@@ -7,6 +7,13 @@ import org.dyn4j.geometry.Convex;
  * geometry and entities. A single instance of this class may be used in the
  * construction of multiple entities.
  * <p>
+ * Definitions can be build by setter chaining and copy constructor. If one
+ * wants to make sure an instance can no longer be modified, it can be locked
+ * through {@link #lock()}. After a call to {@link #lock()} any invocation of
+ * any setter method will result in an {@link IllegalStateException}. The
+ * locking state can be tested through {@link #isLocked()}.
+ * </p>
+ * <p>
  * A fixture definition consists of a {@link Convex} shape, an identifier and a
  * relative density coefficient. The identifier and the density coefficient are
  * both optional. An identifier allows later interactions with a fixture of a
@@ -20,7 +27,7 @@ import org.dyn4j.geometry.Convex;
  * </p>
  * 
  * @author Andreas Wälchli
- * @version 1.2 - 2016/06/17
+ * @version 1.3 - 2016/06/26
  * @since StarFury 0.0.1
  * 
  * @see Convex
@@ -29,12 +36,14 @@ import org.dyn4j.geometry.Convex;
  */
 public final class FixtureDefinition {
 
-	private final Convex shape;
-	private final double density;
-	private final double friction;
-	private final double restitution;
-	private final String id;
-	private final boolean isSensor;
+	private Convex shape;
+	private double density;
+	private double friction;
+	private double restitution;
+	private String id;
+	private boolean isSensor;
+	// locking flag
+	private boolean isLocked;
 
 	/**
 	 * Creates a new FixtureDefinition instance for a given shape, density
@@ -60,7 +69,10 @@ public final class FixtureDefinition {
 	 *             {@code id} is an empty String or the {@code friction} is
 	 *             negative or not finite or the {@code restitution} is not in
 	 *             the range [0,1].
+	 * @deprecated since 0.0.1 - use constructor
+	 *             {@link #FixtureDefinition(Convex)} and setter chaining
 	 */
+	@Deprecated
 	public FixtureDefinition(Convex shape, double density, double friction, double restitution, boolean isSensor,
 			String id) {
 		// validate
@@ -81,6 +93,220 @@ public final class FixtureDefinition {
 		this.friction = friction;
 		this.id = id;
 		this.isSensor = isSensor;
+		this.isLocked = false;
+	}
+
+	/**
+	 * Creates a new FixtureDefinition instance for a given shape with default
+	 * configuration. Change configuration with setters. The default values are:
+	 * <ul>
+	 * <li>{@code density} = 1</li>
+	 * <li>{@code restitution} = 0 (ideal non-elastic body)</li>
+	 * <li>{@code friction} = 0.2</li>
+	 * <li>{@code id} = {@code null}</li>
+	 * <li>{@code isSensor} = {@code false}</li>
+	 * </ul>
+	 * 
+	 * @param shape
+	 *            the convex shape. May not be {@code null}.
+	 * @throws NullPointerException
+	 *             if the {@code shape} is {@code null}.
+	 * @since 1.3 (StarFury 0.0.1)
+	 */
+	public FixtureDefinition(Convex shape) {
+		// validate
+		if (shape == null)
+			throw new NullPointerException("shape may not be null");
+		// initialise
+		this.shape = shape;
+		this.density = 1.0;
+		this.friction = 0.2;
+		this.restitution = 0.0;
+		this.id = null;
+		this.isSensor = false;
+		this.isLocked = false;
+	}
+
+	/**
+	 * Copy constructor. Creates a shallow copy of a given definition. The new
+	 * instance will always be unlocked.
+	 * 
+	 * @param def
+	 *            the original definition. May not be {@code null}.
+	 * @throws NullPointerException
+	 *             if the {@code def} is {@code null}.
+	 * @since 1.3 (StarFury 0.0.1)
+	 */
+	public FixtureDefinition(FixtureDefinition def) {
+		// validate
+		if (def == null)
+			throw new NullPointerException("original def may not be null");
+		// copy
+		this.shape = def.shape;
+		this.density = def.density;
+		this.friction = def.friction;
+		this.restitution = def.restitution;
+		this.id = def.id;
+		this.isSensor = def.isSensor;
+		this.isLocked = false;
+	}
+
+	/**
+	 * Locks the instance. After a call to this method any attempt to modify the
+	 * object through a setter will result in an {@link IllegalStateException}.
+	 * 
+	 * @since 1.3 (StarFury 0.0.1)
+	 */
+	public void lock() {
+		this.isLocked = true;
+	}
+
+	/**
+	 * Enforces the "virtual" immutability of locked instances.
+	 * 
+	 * @throws IllegalStateException
+	 *             if the instance is locked.
+	 * @since 1.3 (StarFury 0.0.1)
+	 */
+	private void enforceLock() {
+		if (this.isLocked)
+			throw new IllegalStateException("instance is locked");
+	}
+
+	/**
+	 * sets the shape
+	 * 
+	 * @param shape
+	 *            the convex shape. May not be {@code null}.
+	 * @return itself
+	 * @throws NullPointerException
+	 *             if the {@code shape} is {@code null}.
+	 * @throws IllegalStateException
+	 *             if the instance is locked.
+	 * @since 1.3 (StarFury 0.0.1)
+	 */
+	public FixtureDefinition setShape(Convex shape) {
+		this.enforceLock();
+		// validate
+		if (shape == null)
+			throw new NullPointerException("shape may not be null");
+		// update
+		this.shape = shape;
+		return this;
+	}
+
+	/**
+	 * sets the density coefficient
+	 * 
+	 * @param density
+	 *            the density coefficient. Must be positive or zero and finite.
+	 * @return itself
+	 * @throws IllegalArgumentException
+	 *             if the density coefficient is negative or not finite.
+	 * @throws IllegalStateException
+	 *             if the instance is locked;
+	 * @since 1.3 (StarFury 0.0.1)
+	 */
+	public FixtureDefinition setDensityCoefficient(double density) {
+		this.enforceLock();
+		// validate
+		if (density < 0 || !Double.isFinite(density))
+			throw new IllegalArgumentException("density coefficient must be positive. Was " + density);
+		// update
+		this.density = density;
+		return this;
+	}
+
+	/**
+	 * 
+	 * @param friction
+	 *            the friction coefficient. Must be positive or zero and finite.
+	 * @return itself
+	 * @throws IllegalArgumentException
+	 *             if the {@code friction} is negative or not finite.
+	 * @throws IllegalStateException
+	 *             if the instance is locked.
+	 * @since 1.3 (StarFury 0.0.1)
+	 */
+	public FixtureDefinition setFrictionCoefficient(double friction) {
+		this.enforceLock();
+		// validate
+		if (friction < 0 || !Double.isFinite(friction))
+			throw new IllegalArgumentException("friction coefficient must be positive. Was " + density);
+		// update
+		this.friction = friction;
+		return this;
+	}
+
+	/**
+	 * sets the restitution coefficient.
+	 * 
+	 * @param restitution
+	 *            the restitution coefficient. Must be in the range [0,1].
+	 * @return itself
+	 * @throws IllegalArgumentException
+	 *             if the restitution coefficient is no in range [0,1].
+	 * @throws IllegalStateException
+	 *             if the instance is locked.
+	 * @since 1.3 (StarFury 0.0.1)
+	 */
+	public FixtureDefinition setRestitutionCoefficient(double restitution) {
+		this.enforceLock();
+		// validate
+		if (restitution < 0 || restitution > 1)
+			throw new IllegalArgumentException("restitution coefficient must be in the range [0,1]. Was " + density);
+		// update
+		this.restitution = restitution;
+		return this;
+	}
+
+	/**
+	 * sets the identifier.
+	 * 
+	 * @param id
+	 *            the identifier string. May be {@code null} if no identifier
+	 *            should be used. May not be an empty String.
+	 * @return itself
+	 * @throws IllegalArgumentException
+	 *             if the {@code id} is an empty string.
+	 * @throws IllegalStateException
+	 *             if the instance is locked.
+	 * @since 1.3 (StarFury 0.0.1)
+	 */
+	public FixtureDefinition setIdentifier(String id) {
+		this.enforceLock();
+		// validate
+		if (id != null && id.isEmpty())
+			throw new IllegalArgumentException("id may not be an empty String. use null instead");
+		// update
+		this.id = id;
+		return this;
+	}
+
+	/**
+	 * sets the sensor flag
+	 * 
+	 * @param isSensor
+	 *            the sensor flag.
+	 * @return itself
+	 * @throws IllegalStateException
+	 *             if the instance is locked.
+	 * @since 1.3 (StarFury 0.0.1)
+	 */
+	public FixtureDefinition setSensor(boolean isSensor) {
+		this.enforceLock();
+		this.isSensor = isSensor;
+		return this;
+	}
+
+	/**
+	 * indicates the locking state of the instance.
+	 * 
+	 * @return {@code true} if the instance is locked.
+	 * @since 1.3 (StarFury 0.0.1)
+	 */
+	public boolean isLocked() {
+		return this.isLocked;
 	}
 
 	public Convex getShape() {
@@ -108,6 +334,15 @@ public final class FixtureDefinition {
 	}
 
 	/**
+	 * Provides a hash value for this definition.
+	 * 
+	 * <p>
+	 * Note that the hash is depending on internal data, therefore it may change
+	 * when changing internal data. For that reason care must be taken when
+	 * using hash maps. When in doubt consider using the copy constructor or
+	 * locking the instance with {@link #lock()}.
+	 * </p>
+	 * 
 	 * {@inheritDoc}
 	 * 
 	 * @since 1.2 (StarFury 0.0.1)
@@ -130,6 +365,14 @@ public final class FixtureDefinition {
 	}
 
 	/**
+	 * Tests object equality.
+	 * 
+	 * <p>
+	 * Does not check the locking state of instances. Therefore a locked
+	 * instance holding the same data as an unlocked one is considered equal to
+	 * it.
+	 * </p>
+	 * 
 	 * {@inheritDoc}
 	 * 
 	 * @since 1.2 (StarFury 0.0.1)
