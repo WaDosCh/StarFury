@@ -8,11 +8,8 @@ import org.dyn4j.geometry.Convex;
  * construction of multiple entities.
  * <p>
  * Definitions can be build by setter chaining and copy constructor. If one
- * wants to make sure an instance can no longer be modified, it can be locked
- * through {@link #lock()}. After a call to {@link #lock()} any invocation of
- * any setter method will result in an {@link IllegalStateException}. The
- * locking state can be tested through {@link #isLocked()}.
- * </p>
+ * wants to make sure an instance can no longer be modified, it should be
+ * {@link #lock() locked}.
  * <p>
  * A fixture definition consists of a {@link Convex} shape, an identifier and a
  * relative density coefficient. The identifier and the density coefficient are
@@ -27,14 +24,15 @@ import org.dyn4j.geometry.Convex;
  * </p>
  * 
  * @author Andreas Wälchli
- * @version 1.3 - 2016/06/26
+ * @version 1.4 - 2016/06/30
  * @since StarFury 0.0.1
  * 
  * @see Convex
  * @see PhysicsEntity
  * @see CollisionListener
+ * @see Lockable
  */
-public final class FixtureDefinition {
+public final class FixtureDefinition implements Lockable {
 
 	private Convex shape;
 	private double density;
@@ -159,18 +157,6 @@ public final class FixtureDefinition {
 	 */
 	public void lock() {
 		this.isLocked = true;
-	}
-
-	/**
-	 * Enforces the "virtual" immutability of locked instances.
-	 * 
-	 * @throws IllegalStateException
-	 *             if the instance is locked.
-	 * @since 1.3 (StarFury 0.0.1)
-	 */
-	private void enforceLock() {
-		if (this.isLocked)
-			throw new IllegalStateException("instance is locked");
 	}
 
 	/**
