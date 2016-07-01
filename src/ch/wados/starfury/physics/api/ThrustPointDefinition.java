@@ -28,7 +28,7 @@ public final class ThrustPointDefinition implements Lockable {
 	private Vector2 position;
 	private Vector2 direction;
 	private String id;
-	private boolean isLocked;
+	private boolean isLocked = false;
 
 	/**
 	 * Creates a new instance from a given identifier. The remaining values
@@ -168,6 +168,7 @@ public final class ThrustPointDefinition implements Lockable {
 	 * @param direction
 	 *            the new direction vector. May not be {@code null} or the zero
 	 *            vector.
+	 * @return itself
 	 * @throws IllegalStateException
 	 *             if the instance is locked.
 	 * @throws NullPointerException
@@ -176,7 +177,7 @@ public final class ThrustPointDefinition implements Lockable {
 	 *             if the {@code direction} is the zero vector.
 	 * @since 1.3 (StarFury 0.0.1)
 	 */
-	public void setDirection(Vector2 direction) {
+	public ThrustPointDefinition setDirection(Vector2 direction) {
 		this.enforceLock();
 		// validate
 		if (direction == null)
@@ -185,6 +186,7 @@ public final class ThrustPointDefinition implements Lockable {
 			throw new IllegalArgumentException("direction may not be the zero vector");
 		// update
 		this.direction = direction.getNormalized();
+		return this;
 	}
 
 	/**
@@ -193,6 +195,7 @@ public final class ThrustPointDefinition implements Lockable {
 	 * @param id
 	 *            the new identifier. May not be {@code null} or an empty
 	 *            string.
+	 * @return itself
 	 * @throws IllegalStateException
 	 *             if the instance is locked.
 	 * @throws NullPointerException
@@ -201,7 +204,7 @@ public final class ThrustPointDefinition implements Lockable {
 	 *             if the {@code id} is an empty string.
 	 * @since 1.3 (StarFury 0.0.1)
 	 */
-	public void setIdentifier(String id) {
+	public ThrustPointDefinition setIdentifier(String id) {
 		this.enforceLock();
 		// validate
 		if (id == null)
@@ -210,6 +213,7 @@ public final class ThrustPointDefinition implements Lockable {
 			throw new IllegalArgumentException("id may not be empty");
 		// update
 		this.id = id;
+		return this;
 	}
 
 	/**
@@ -217,19 +221,21 @@ public final class ThrustPointDefinition implements Lockable {
 	 * 
 	 * @param position
 	 *            the new position vector. May not be {@code null}.
+	 * @return itself
 	 * @throws IllegalStateException
 	 *             if the instance is locked.
 	 * @throws NullPointerException
 	 *             if the {@code position} is {@code null}.
 	 * @since 1.3 (StarFury 0.0.1)
 	 */
-	public void setPosition(Vector2 position) {
+	public ThrustPointDefinition setPosition(Vector2 position) {
 		this.enforceLock();
 		// validate
 		if (position == null)
 			throw new NullPointerException("position may not be null");
 		// update
 		this.position = new Vector2(position);
+		return this;
 	}
 
 }

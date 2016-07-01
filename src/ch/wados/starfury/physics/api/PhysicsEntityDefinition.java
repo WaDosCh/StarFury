@@ -1,6 +1,7 @@
 package ch.wados.starfury.physics.api;
 
 import java.util.ArrayList;
+import java.util.Collections;
 import java.util.List;
 
 import org.dyn4j.geometry.Vector2;
@@ -12,17 +13,41 @@ import org.dyn4j.geometry.Vector2;
  * construction of multiple entities.
  * 
  * @author Andreas Wälchli
- * @version 1.2 - 2016/06/17
+ * @version 1.3 - 2016/07/01
  * @since StarFury 0.0.1
+ * 
+ * @see Lockable
  */
-public final class PhysicsEntityDefinition {
+public final class PhysicsEntityDefinition implements Lockable {
 
-	private final EntityType type;
-	private final double mass;
-	private final List<FixtureDefinition> fixtures;
-	private final List<ThrustPointDefinition> thrustpoints;
-	private final Vector2 position;
-	private final double orientation;
+	private EntityType type;
+	private double mass;
+	private List<FixtureDefinition> fixtures;
+	private List<ThrustPointDefinition> thrustpoints;
+	private Vector2 position;
+	private double orientation;
+	private double linearDampening;
+	private double angularDampening;
+	// read-only list access
+	private final List<FixtureDefinition> ro_fixtures;
+	private final List<ThrustPointDefinition> ro_thrust;
+	// locking flat
+	private boolean isLocked = false;
+
+	public PhysicsEntityDefinition(EntityType type) {
+		// validate
+		if (type == null)
+			throw new NullPointerException("type may not be null");
+		// construct
+		this.type = type;
+		this.mass = 1;
+		this.position = new Vector2(0, 0);
+		this.orientation = 0;
+		this.fixtures = new ArrayList<>();
+		this.thrustpoints = new ArrayList<>();
+		this.ro_fixtures = Collections.unmodifiableList(this.fixtures);
+		this.ro_thrust = Collections.unmodifiableList(this.thrustpoints);
+	}
 
 	/**
 	 * Creates a new PhysicsEntityDefinition instance from a given type, mass
@@ -46,7 +71,10 @@ public final class PhysicsEntityDefinition {
 	 *             if {@code mass} is negative.
 	 * @throws IllegalArgumentException
 	 *             if {@code orientation} is non-finite.
+	 * @deprecated since 0.0.1 - use constructor
+	 *             {@link #PhysicsEntityDefinition(EntityType)} instead.
 	 */
+	@Deprecated
 	public PhysicsEntityDefinition(EntityType type, double mass, Vector2 position, double orientation) {
 		// validate input
 		if (type == null)
@@ -65,6 +93,10 @@ public final class PhysicsEntityDefinition {
 		// initialise lists
 		this.fixtures = new ArrayList<>();
 		this.thrustpoints = new ArrayList<>();
+		this.ro_fixtures = Collections.unmodifiableList(this.fixtures);
+		this.ro_thrust = Collections.unmodifiableList(this.thrustpoints);
+		this.angularDampening = 0.02;
+		this.linearDampening = 0;
 	}
 
 	/**
@@ -80,6 +112,7 @@ public final class PhysicsEntityDefinition {
 	 *             that of an already existing fixture.
 	 */
 	public PhysicsEntityDefinition addFixture(FixtureDefinition fixture) {
+		this.enforceLock();
 		// validate input
 		if (fixture == null)
 			throw new NullPointerException("fixture may not be null");
@@ -104,6 +137,7 @@ public final class PhysicsEntityDefinition {
 	 *             that of an already existing thrust point.
 	 */
 	public PhysicsEntityDefinition addThrustPoint(ThrustPointDefinition thrustpoint) {
+		this.enforceLock();
 		// validate input
 		if (thrustpoint == null)
 			throw new NullPointerException("thrustpoint may not be null");
@@ -124,7 +158,7 @@ public final class PhysicsEntityDefinition {
 	}
 
 	public List<FixtureDefinition> getFixtures() {
-		return this.fixtures;
+		return this.ro_fixtures;
 	}
 
 	public Vector2 getInitialPosition() {
@@ -136,71 +170,17 @@ public final class PhysicsEntityDefinition {
 	}
 
 	public List<ThrustPointDefinition> getThrustPoints() {
-		return this.thrustpoints;
+		return this.ro_thrust;
 	}
 
-	/**
-	 * The {@code hashCode} is not depending on the fixture and thrustPoint
-	 * lists. Therefore if 2 {@code PhysicsEntityDefinitions} have the same
-	 * parameters except for the fixture and thrustPoint lists, they will have
-	 * the same hash. This also implies that adding fixtures or thrustPoints to
-	 * an existing {@code PhysicsEntityDefinition} does not change its hash -
-	 * useful if they are managed in hash maps.
-	 * 
-	 * {@inheritDoc}
-	 * 
-	 * @since 1.2 (StarFury 0.0.1)
-	 */
 	@Override
-	public int hashCode() {
-		final int prime = 31;
-		int result = 1;
-		long temp;
-		temp = Double.doubleToLongBits(mass);
-		result = prime * result + (int) (temp ^ (temp >>> 32));
-		temp = Double.doubleToLongBits(orientation);
-		result = prime * result + (int) (temp ^ (temp >>> 32));
-		result = prime * result + ((position == null) ? 0 : position.hashCode());
-		result = prime * result + ((type == null) ? 0 : type.hashCode());
-		return result;
+	public void lock() {
+		this.isLocked = true;
 	}
 
-	/**
-	 * {@inheritDoc}
-	 * 
-	 * @since 1.2 (StarFury 0.0.1)
-	 */
 	@Override
-	public boolean equals(Object obj) {
-		if (this == obj)
-			return true;
-		if (obj == null)
-			return false;
-		if (getClass() != obj.getClass())
-			return false;
-		PhysicsEntityDefinition other = (PhysicsEntityDefinition) obj;
-		if (fixtures == null) {
-			if (other.fixtures != null)
-				return false;
-		} else if (!fixtures.equals(other.fixtures))
-			return false;
-		if (Double.doubleToLongBits(mass) != Double.doubleToLongBits(other.mass))
-			return false;
-		if (Double.doubleToLongBits(orientation) != Double.doubleToLongBits(other.orientation))
-			return false;
-		if (position == null) {
-			if (other.position != null)
-				return false;
-		} else if (!position.equals(other.position))
-			return false;
-		if (thrustpoints == null) {
-			if (other.thrustpoints != null)
-				return false;
-		} else if (!thrustpoints.equals(other.thrustpoints))
-			return false;
-		if (type != other.type)
-			return false;
-		return true;
+	public boolean isLocked() {
+		return this.isLocked;
 	}
 
 }
