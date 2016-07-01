@@ -11,4 +11,8 @@ public class GuiController {
 		this.renderingManager = renderingManager;
 	}
 
+	public void startLoop() {
+		// TODO Auto-generated method stub
+	}
+
 }

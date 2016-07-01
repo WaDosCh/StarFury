@@ -20,11 +20,8 @@ public class GameController {
 	public void startGame() {
 		this.guiController.setRenderingManager(this.renderingManager);
 		this.physicsManager.initialiseWorld(new Vector2(0, 0));
-		startGameLoop();
+
+		this.guiController.startLoop();
 	}
 
-	private void startGameLoop() {
-		// TODO Auto-generated method stub
-
-	}
 }
