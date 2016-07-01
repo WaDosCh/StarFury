@@ -24,4 +24,8 @@ public class GameController {
 		this.guiController.startLoop();
 	}
 
+	public void load() {
+		this.renderingManager.load();
+	}
+
 }

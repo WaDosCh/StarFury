@@ -14,7 +14,12 @@ public class GameLauncher {
 
 	public GameLauncher() {
 		buildUpComponents();
+		start();
+	}
 
+	private void start() {
+		this.guiController.openWindow();
+		this.gameController.load();
 		this.gameController.startGame();
 	}
 
