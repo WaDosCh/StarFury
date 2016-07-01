@@ -14,10 +14,6 @@ package ch.wados.starfury.physics.api;
  * the discrete collision detection in the subsequent collision step.
  * </p>
  * 
- * @author Andreas Wälchli
- * @version 1.1 - 2016/06/14
- * @since StarFury 0.0.1
- * 
  * @see UpdateListener
  * @see TimeOfImpact
  */
@@ -46,6 +42,7 @@ public interface TimeOfImpactListener {
 	 *         if it should be ignored. By default {@code true} should be
 	 *         returned.
 	 */
-	boolean collision(PhysicsEntity entity0, String fixture0, PhysicsEntity entity1, String fixture1, double toi);
+	boolean collision(PhysicsEntity entity0, String fixture0,
+			PhysicsEntity entity1, String fixture1, double toi);
 
 }
