@@ -17,10 +17,6 @@ import org.dyn4j.geometry.Vector2;
  * thrust-points later on. The identifier must be unique within an entity.
  * </p>
  * 
- * @author Andreas Wälchli
- * @version 1.3 - 2016/06/30
- * @since StarFury 0.0.1
- * 
  * @see Lockable
  */
 public final class ThrustPointDefinition implements Lockable {
@@ -44,7 +40,6 @@ public final class ThrustPointDefinition implements Lockable {
 	 *             if the {@code id} is {@code null}.
 	 * @throws IllegalArgumentException
 	 *             if the {@code id} is an empty string.
-	 * @since 1.3 (StarFury 0.0.1)
 	 */
 	public ThrustPointDefinition(String id) {
 		this.setIdentifier(id);
@@ -58,7 +53,6 @@ public final class ThrustPointDefinition implements Lockable {
 	 *            the original instance. May not be {@code null}.
 	 * @throws NullPointerException
 	 *             if the {@code original} is {@code null}.
-	 * @since 1.3 (StarFury 0.0.1)
 	 */
 	public ThrustPointDefinition(ThrustPointDefinition original) {
 		if (original == null)
@@ -93,11 +87,6 @@ public final class ThrustPointDefinition implements Lockable {
 		this.setDirection(direction);
 	}
 
-	/**
-	 * {@inheritDoc}
-	 * 
-	 * @since 1.2 (StarFury 0.0.1)
-	 */
 	@Override
 	public boolean equals(Object obj) {
 		if (this == obj)
@@ -137,11 +126,6 @@ public final class ThrustPointDefinition implements Lockable {
 		return this.position;
 	}
 
-	/**
-	 * {@inheritDoc}
-	 * 
-	 * @since 1.2 (StarFury 0.0.1)
-	 */
 	@Override
 	public int hashCode() {
 		final int prime = 31;
@@ -175,7 +159,6 @@ public final class ThrustPointDefinition implements Lockable {
 	 *             if the {@code direction} is {@code null}.
 	 * @throws IllegalArgumentException
 	 *             if the {@code direction} is the zero vector.
-	 * @since 1.3 (StarFury 0.0.1)
 	 */
 	public ThrustPointDefinition setDirection(Vector2 direction) {
 		this.enforceLock();
@@ -202,7 +185,6 @@ public final class ThrustPointDefinition implements Lockable {
 	 *             if the {@code id} is {@code null}.
 	 * @throws IllegalArgumentException
 	 *             if the {@code id} is an empty string.
-	 * @since 1.3 (StarFury 0.0.1)
 	 */
 	public ThrustPointDefinition setIdentifier(String id) {
 		this.enforceLock();
@@ -226,7 +208,6 @@ public final class ThrustPointDefinition implements Lockable {
 	 *             if the instance is locked.
 	 * @throws NullPointerException
 	 *             if the {@code position} is {@code null}.
-	 * @since 1.3 (StarFury 0.0.1)
 	 */
 	public ThrustPointDefinition setPosition(Vector2 position) {
 		this.enforceLock();

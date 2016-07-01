@@ -372,16 +372,18 @@ class SimpleEntity implements PhysicsEntity {
 		List<ThrustPointDefinition> thrusts = def.getThrustPoints();
 
 		this.body = new Body(fixtures.size());
-		this.body.rotate(def.getInitialOrientation());
-		this.body.translate(def.getInitialPosition());
+		this.body.rotate(def.getOrientation());
+		this.body.translate(def.getPosition());
 		this.thrusters = new ThrusterSystem(thrusts.size());
-		this.type = def.getEntityType();
+		this.type = def.getType();
 
 		for (FixtureDefinition f : fixtures)
 			this.buildFixture(f);
 
 		this.recalculateCoM();
-		this.setMass(def.getInitialMass());
+		this.setMass(def.getMass());
+		
+		// TODO: add dampening
 
 		for (ThrustPointDefinition t : thrusts)
 			this.thrusters.addThruster(t);

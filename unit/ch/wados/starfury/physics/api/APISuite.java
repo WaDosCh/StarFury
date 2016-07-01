@@ -8,6 +8,6 @@ import org.junit.runners.Suite.SuiteClasses;
  * Suite combining all physics API tests
  */
 @RunWith(Suite.class)
-@SuiteClasses({ ThrustDefTest.class, FixtureDefTest.class, PhysicsEntityDefTest.class })
+@SuiteClasses({ ThrustDefTest.class, FixtureDefTest.class })
 public class APISuite {
 }
