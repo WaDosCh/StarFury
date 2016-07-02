@@ -4,6 +4,8 @@ import static org.lwjgl.glfw.Callbacks.glfwFreeCallbacks;
 import static org.lwjgl.glfw.GLFW.*;
 import static org.lwjgl.system.MemoryUtil.NULL;
 
+import javax.swing.plaf.synth.SynthSeparatorUI;
+
 import org.lwjgl.glfw.GLFWErrorCallback;
 import org.lwjgl.glfw.GLFWVidMode;
 import org.lwjgl.opengl.GL;
@@ -77,7 +79,9 @@ public class Window {
 
 		// Get the resolution of the primary monitor
 		long monitor = glfwGetPrimaryMonitor();
+		System.out.println(monitor);
 		GLFWVidMode vidmode = glfwGetVideoMode(monitor);
+		System.out.println(vidmode.width() + " / " + vidmode.height());
 
 		// Create the window
 		this.window = glfwCreateWindow(vidmode.width(), vidmode.height(),

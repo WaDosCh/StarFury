@@ -4,10 +4,16 @@ import java.util.logging.Level;
 import java.util.logging.Logger;
 
 import org.dyn4j.geometry.Vector2;
+import org.lwjgl.opengl.GL11;
 
 import silvertiger.tutorial.lwjgl.core.Game;
+import silvertiger.tutorial.lwjgl.math.Matrix4f;
 import ch.wados.starfury.model.Timer;
 import ch.wados.starfury.physics.simple.SimplePhysicsManager;
+import ch.wados.starfury.view.ShaderFactory;
+import ch.wados.starfury.view.ShaderProgram;
+import ch.wados.starfury.view.SpriteRenderer;
+import ch.wados.starfury.view.Texture;
 
 public class GameController implements Scene {
 
@@ -24,14 +30,24 @@ public class GameController implements Scene {
 
 	@Override
 	public void exit() {
+		this.shader.delete();
 		// TODO Auto-generated method stub
 
 	}
+
+	private ShaderProgram shader;
+	private SpriteRenderer renderer;
 
 	@Override
 	public void enter(SceneManager manager) {
 		this.manager = manager;
 		this.physicsManager.initialiseWorld(new Vector2(0, 0));
+
+		this.shader = ShaderFactory.createShader(
+				"resource/shaders/texture_vertex.vs",
+				"resource/shaders/texture_fragment.fs");
+		this.renderer = new SpriteRenderer(
+				Texture.loadTexture("resource/test.png"), shader, 0.5f, 0.5f);
 
 		this.loop();
 	}
@@ -81,6 +97,12 @@ public class GameController implements Scene {
 	}
 
 	private void render() {
+		GL11.glClear(GL11.GL_COLOR_BUFFER_BIT);
+
+		this.renderer.render(new Matrix4f(), new Matrix4f());
+		
+		this.manager.getWindow().update();
+
 		// TODO Auto-generated method stub
 
 	}
