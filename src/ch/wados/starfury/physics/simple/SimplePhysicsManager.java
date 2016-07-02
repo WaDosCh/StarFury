@@ -1,6 +1,7 @@
 package ch.wados.starfury.physics.simple;
 
 import java.util.ArrayList;
+import java.util.Collections;
 import java.util.List;
 import java.util.Objects;
 
@@ -29,10 +30,12 @@ public final class SimplePhysicsManager implements PhysicsManager {
 
 	private boolean initialised = false;
 	private World world;
-	private List<SimpleEntity> spawnedEntities;
+	private List<PhysicsEntity> spawnedEntities;
+	private final List<PhysicsEntity> entityView;
 
 	public SimplePhysicsManager() {
 		this.spawnedEntities = new ArrayList<>();
+		this.entityView = Collections.unmodifiableList(this.spawnedEntities);
 	}
 
 	private void assertInit() {
@@ -111,7 +114,7 @@ public final class SimplePhysicsManager implements PhysicsManager {
 		if (this.world.getBodies()
 				.contains(((SimpleEntity) entity).getBody())) {
 			this.world.removeBody(((SimpleEntity) entity).getBody());
-			this.spawnedEntities.remove((SimpleEntity) entity);
+			this.spawnedEntities.remove(entity);
 		} else
 			throw new IllegalArgumentException("entity does not exist");
 	}
@@ -135,7 +138,7 @@ public final class SimplePhysicsManager implements PhysicsManager {
 		if (!(entity instanceof SimpleEntity))
 			throw new IllegalArgumentException("incompatible entity");
 		this.world.addBody(((SimpleEntity) entity).getBody());
-		this.spawnedEntities.add((SimpleEntity) entity);
+		this.spawnedEntities.add(entity);
 	}
 
 	@Override
@@ -207,6 +210,11 @@ public final class SimplePhysicsManager implements PhysicsManager {
 
 		}
 
+	}
+
+	@Override
+	public List<PhysicsEntity> getSpawnedEntities() {
+		return this.entityView;
 	}
 
 }

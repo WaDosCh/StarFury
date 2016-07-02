@@ -1,5 +1,7 @@
 package ch.wados.starfury.physics.api;
 
+import java.util.List;
+
 import org.dyn4j.geometry.Vector2;
 
 /**
@@ -142,10 +144,20 @@ public interface PhysicsManager extends Listenable {
 	 */
 	default void stepWorld(double totalTime, int substeps) {
 		if (substeps <= 0)
-			throw new IllegalArgumentException("substep count must be positive");
+			throw new IllegalArgumentException(
+					"substep count must be positive");
 		final double stepTime = totalTime / substeps;
 		for (int i = 0; i < substeps; i++)
 			stepWorld(stepTime);
 	}
+
+	/**
+	 * Provides a full list of all currently spawned entities. The contents of
+	 * this list may change over time, but it should be enough for some basic
+	 * interaction.
+	 * 
+	 * @return a list of all entities currently spawned.
+	 */
+	List<PhysicsEntity> getSpawnedEntities();
 
 }
