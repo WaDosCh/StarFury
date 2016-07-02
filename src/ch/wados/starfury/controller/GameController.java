@@ -1,5 +1,7 @@
 package ch.wados.starfury.controller;
 
+import java.io.IOException;
+
 import org.dyn4j.geometry.Vector2;
 
 import ch.wados.starfury.physics.simple.SimplePhysicsManager;
@@ -25,7 +27,11 @@ public class GameController {
 	}
 
 	public void load() {
-		this.renderingManager.load();
+		try {
+			this.renderingManager.load();
+		} catch (IOException e) {
+			e.printStackTrace();
+		}
 	}
 
 }
