@@ -128,7 +128,7 @@ public final class SimplePhysicsManager implements PhysicsManager {
 	@Override
 	public void setGravity(Vector2 gravity) {
 		this.assertInit();
-		this.world.setGravity(gravity);
+		this.world.setGravity(gravity.copy());
 	}
 
 	@Override
