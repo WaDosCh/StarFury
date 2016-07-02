@@ -29,8 +29,10 @@ public final class SimplePhysicsManager implements PhysicsManager {
 
 	private boolean initialised = false;
 	private World world;
+	private List<SimpleEntity> spawnedEntities;
 
 	public SimplePhysicsManager() {
+		this.spawnedEntities = new ArrayList<>();
 	}
 
 	private void assertInit() {
@@ -106,9 +108,11 @@ public final class SimplePhysicsManager implements PhysicsManager {
 		Objects.requireNonNull(entity);
 		if (!(entity instanceof SimpleEntity))
 			throw new IllegalArgumentException("incompatible entity");
-		if (this.world.getBodies().contains(((SimpleEntity) entity).getBody()))
+		if (this.world.getBodies()
+				.contains(((SimpleEntity) entity).getBody())) {
 			this.world.removeBody(((SimpleEntity) entity).getBody());
-		else
+			this.spawnedEntities.remove((SimpleEntity) entity);
+		} else
 			throw new IllegalArgumentException("entity does not exist");
 	}
 
@@ -131,6 +135,7 @@ public final class SimplePhysicsManager implements PhysicsManager {
 		if (!(entity instanceof SimpleEntity))
 			throw new IllegalArgumentException("incompatible entity");
 		this.world.addBody(((SimpleEntity) entity).getBody());
+		this.spawnedEntities.add((SimpleEntity) entity);
 	}
 
 	@Override
@@ -150,20 +155,41 @@ public final class SimplePhysicsManager implements PhysicsManager {
 	public void stepWorld(double stepTime) {
 		this.assertInit();
 		this.world.updatev(stepTime);
-		this.updateListeners.forEach(UpdateListener::update);
+		this.updateEvent();
+	}
+
+	private void updateEvent() {
+		updateListeners.forEach(UpdateListener::update);
+		spawnedEntities.forEach(UpdateListener::update);
+	}
+
+	private void contactEvent(CollisionPoint cp) {
+		collisionListeners.forEach(cl -> cl.collision(cp));
+		cp.entity0.collision(cp);
+		cp.entity1.collision(cp);
+	}
+
+	private boolean toiEvent(SimpleEntity entity0, String fixture0,
+			SimpleEntity entity1, String fixture1, double toi) {
+		boolean result = true;
+		for (TimeOfImpactListener listener : toiListeners)
+			result &= listener.collision(entity0, fixture0, entity1, fixture1,
+					toi);
+		result &= entity0.collision(entity0, fixture0, entity1, fixture1, toi);
+		result &= entity1.collision(entity0, fixture0, entity1, fixture1, toi);
+		return result;
 	}
 
 	class ContactListener extends ContactAdapter {
 		@Override
 		public void postSolve(SolvedContactPoint point) {
-			CollisionPoint cp = new CollisionPoint(
+			contactEvent(new CollisionPoint(
 					(SimpleEntity) point.getBody1().getUserData(),
 					(String) point.getFixture1().getUserData(),
 					(SimpleEntity) point.getBody2().getUserData(),
 					(String) point.getFixture2().getUserData(),
 					point.getPoint().copy(), point.getNormal().copy(),
-					point.getNormalImpulse(), point.getTangentialImpulse());
-			collisionListeners.forEach(cl -> cl.collision(cp));
+					point.getNormalImpulse(), point.getTangentialImpulse()));
 		}
 	}
 
@@ -172,17 +198,13 @@ public final class SimplePhysicsManager implements PhysicsManager {
 		@Override
 		public boolean collision(Body body1, BodyFixture fixture1, Body body2,
 				BodyFixture fixture2, TimeOfImpact toi) {
-			PhysicsEntity entity_0 = ((SimpleEntity) body1.getUserData());
-			PhysicsEntity entity_1 = ((SimpleEntity) body2.getUserData());
+			SimpleEntity entity_0 = ((SimpleEntity) body1.getUserData());
+			SimpleEntity entity_1 = ((SimpleEntity) body2.getUserData());
 			String fixture_0 = ((String) fixture1.getUserData());
 			String fixture_1 = ((String) fixture2.getUserData());
 			double tau = toi.getTime();
-			boolean result = true;
-			for (TimeOfImpactListener l : toiListeners)
-				result &= l.collision(entity_0, fixture_0, entity_1, fixture_1,
-						tau);
+			return toiEvent(entity_0, fixture_0, entity_1, fixture_1, tau);
 
-			return result;
 		}
 
 	}

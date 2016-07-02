@@ -30,10 +30,6 @@ import ch.wados.starfury.physics.api.UpdateListener;
 /**
  * Simple Entity
  * 
- * @author Andreas Wälchli
- * @version 1.1 - 2016/06/14
- * @since StarFury 0.0.1
- * 
  * @see PhysicsEntity
  */
 class SimpleEntity implements PhysicsEntity {

@@ -13,10 +13,6 @@ import ch.wados.starfury.physics.api.ThrustPointDefinition;
 /**
  * The set of all {@link Thruster Thrusters} of an entity. Includes force/torque
  * caching and update management.
- * 
- * @author Andreas Wälchli
- * @version 1.1 - 2016/06/14
- * @since StarFury 0.0.1
  */
 class ThrusterSystem {
 
@@ -121,7 +117,8 @@ class ThrusterSystem {
 		String id = def.getIdentifier();
 		for (Thruster t : this.thrusters)
 			if (t.identifier.equals(id))
-				throw new IllegalArgumentException("thruster with id [" + id + "] already exists");
+				throw new IllegalArgumentException(
+						"thruster with id [" + id + "] already exists");
 		// create thruster
 		Thruster t = new Thruster(def);
 		t.update(this.CoM);
