@@ -7,8 +7,6 @@ import java.util.Objects;
 
 import org.dyn4j.geometry.Vector2;
 
-import ch.wados.starfury.util.Math;
-
 /**
  * Definition object for physics entities. A physics entity is a single body in
  * the physics engine. A definition object contains all relevant information for
@@ -136,7 +134,7 @@ public final class PhysicsEntityDefinition implements Lockable {
 
 	public PhysicsEntityDefinition setOrientation(double orientation) {
 		this.enforceLock();
-		this.orientation = Math.normalizedAngle(orientation);
+		this.orientation = ch.waan.math.Math.normalizedAngle(orientation);
 		return this;
 	}
 
@@ -146,7 +144,8 @@ public final class PhysicsEntityDefinition implements Lockable {
 		return this;
 	}
 
-	public PhysicsEntityDefinition setAngularDampening(double angularDampening) {
+	public PhysicsEntityDefinition setAngularDampening(
+			double angularDampening) {
 		this.enforceLock();
 		this.angularDampening = angularDampening;
 		return this;
@@ -177,7 +176,9 @@ public final class PhysicsEntityDefinition implements Lockable {
 		this.enforceLock();
 		Objects.requireNonNull(def);
 		synchronized (THRUST_LOCK) {
-			if (this.thrustpoints.stream().filter(t -> def.getIdentifier().equals(t.getIdentifier())).count() > 0)
+			if (this.thrustpoints.stream()
+					.filter(t -> def.getIdentifier().equals(t.getIdentifier()))
+					.count() > 0)
 				throw new IllegalArgumentException("duplicate id");
 			this.thrustpoints.add(def);
 		}
@@ -188,8 +189,9 @@ public final class PhysicsEntityDefinition implements Lockable {
 		this.enforceLock();
 		Objects.requireNonNull(def);
 		synchronized (FIXTURE_LOCK) {
-			if (def.getIdentifier() != null
-					&& this.fixtures.stream().filter(f -> def.getIdentifier().equals(f.getIdentifier())).count() > 0)
+			if (def.getIdentifier() != null && this.fixtures.stream()
+					.filter(f -> def.getIdentifier().equals(f.getIdentifier()))
+					.count() > 0)
 				throw new IllegalArgumentException("duplicate id");
 			this.fixtures.add(def);
 		}
