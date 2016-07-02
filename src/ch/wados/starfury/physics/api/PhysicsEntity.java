@@ -204,6 +204,10 @@ public interface PhysicsEntity extends ListenerRelay {
 		return this.getTransform().getTransformed(local);
 	}
 
+	void wakeUp();
+
+	boolean isAsleep();
+
 	/**
 	 * Converts a vector in local coordinates into world coordinates. Only the
 	 * rotation is performed.
