@@ -14,5 +14,5 @@ void main () {
 	vertexColor = color;
 	textureCoord = texcoord;
 	mat4 mc = camera * model;
-	gl_Position = mc * vec4(position, 0.0, 1.0);
+	gl_Position = mc * vec4(position, 1.0, 1.0);
 }

@@ -46,7 +46,7 @@ public class GameController implements Scene {
 		this.shader = ShaderFactory.createShader("texture_vertex.vs",
 				"texture_fragment.fs");
 		this.renderer = new SpriteRenderer(Texture.loadTexture("test.png"),
-				shader, 0.5f, 0.5f);
+				shader, 100f, 100f);
 
 		this.loop();
 	}
@@ -97,6 +97,7 @@ public class GameController implements Scene {
 
 	private void render() {
 		GL11.glClear(GL11.GL_COLOR_BUFFER_BIT);
+		GL11.glClear(GL11.GL_DEPTH_BUFFER_BIT);
 
 		this.renderer.render(new Matrix4f(), new Matrix4f());
 
