@@ -364,7 +364,7 @@ class SimpleEntity implements PhysicsEntity {
 	private final static Runnable NULL_RUNNABLE = () -> {
 	};
 
-	private final Body body;
+	final Body body;
 	private final ThrusterSystem thrusters;
 	private final EntityType type;
 	private Runnable callback = NULL_RUNNABLE;
@@ -383,11 +383,14 @@ class SimpleEntity implements PhysicsEntity {
 		this.body.setUserData(this);
 		this.body.rotate(def.getOrientation());
 		this.body.translate(def.getPosition());
+
 		this.thrusters = new ThrusterSystem(thrusts.size());
 		this.type = def.getType();
 
 		for (FixtureDefinition f : fixtures)
 			this.buildFixture(f);
+		
+		this.body.setMass(MassType.NORMAL);
 
 		this.recalculateCoM();
 		this.setMass(def.getMass());
@@ -433,6 +436,17 @@ class SimpleEntity implements PhysicsEntity {
 			duration -= elapsedTime;
 			return duration < Epsilon.E;
 		}
+	}
+
+	@Override
+	public void wakeUp() {
+		this.body.setAsleep(false);
+
+	}
+
+	@Override
+	public boolean isAsleep() {
+		return this.body.isAsleep();
 	}
 
 }
