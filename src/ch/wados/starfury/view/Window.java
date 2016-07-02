@@ -1,11 +1,7 @@
-package ch.wados.starfury.controller;
+package ch.wados.starfury.view;
 
 import static org.lwjgl.glfw.Callbacks.glfwFreeCallbacks;
 import static org.lwjgl.glfw.GLFW.*;
-import static org.lwjgl.opengl.GL11.GL_COLOR_BUFFER_BIT;
-import static org.lwjgl.opengl.GL11.GL_DEPTH_BUFFER_BIT;
-import static org.lwjgl.opengl.GL11.glClear;
-import static org.lwjgl.opengl.GL11.glClearColor;
 import static org.lwjgl.system.MemoryUtil.NULL;
 
 import org.lwjgl.glfw.GLFWErrorCallback;
@@ -13,40 +9,35 @@ import org.lwjgl.glfw.GLFWVidMode;
 import org.lwjgl.opengl.GL;
 import org.lwjgl.opengl.GLCapabilities;
 
-public class GuiController {
+public class Window {
 
-	private RenderingManager renderingManager;
 	private long window;
 
-	public GuiController() {
+	public Window() {
 	}
 
-	public void setRenderingManager(RenderingManager renderingManager) {
-		this.renderingManager = renderingManager;
-	}
-
-	public void startLoop() {
-		try {
-			// Set the clear color
-			glClearColor(0.2f, 0.2f, 0.2f, 0.0f);
-
-			// Run the rendering loop until the user has attempted to close
-			// the window or has pressed the ESCAPE key.
-			while (!glfwWindowShouldClose(window)) {
-				glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT); // clear the
-																	// framebuffer
-				this.renderingManager.draw();
-
-				glfwSwapBuffers(window); // swap the color buffers
-
-				// Poll for window events. The key callback above will only be
-				// invoked during this call.
-				glfwPollEvents();
-			}
-		} finally {
-			glfwTerminate();
-		}
-	}
+	// public void startLoop() {
+	// try {
+	// // Set the clear color
+	// glClearColor(0.2f, 0.2f, 0.2f, 0.0f);
+	//
+	// // Run the rendering loop until the user has attempted to close
+	// // the window or has pressed the ESCAPE key.
+	// while (!glfwWindowShouldClose(window)) {
+	// glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT); // clear the
+	// // framebuffer
+	// //draw();
+	//
+	// glfwSwapBuffers(window); // swap the color buffers
+	//
+	// // Poll for window events. The key callback above will only be
+	// // invoked during this call.
+	// glfwPollEvents();
+	// }
+	// } finally {
+	// glfwTerminate();
+	// }
+	// }
 
 	public boolean isOpened() {
 		return this.window != NULL;
@@ -95,7 +86,7 @@ public class GuiController {
 			throw new RuntimeException("Failed to create the GLFW window");
 
 		// Make the OpenGL context current
-		glfwMakeContextCurrent(window);
+		glfwMakeContextCurrent(this.window);
 
 		// This line is critical for LWJGL's interoperation with GLFW's
 		// OpenGL context, or any context that is managed externally.
@@ -108,13 +99,26 @@ public class GuiController {
 		glfwSwapInterval(1);
 
 		// Make the window visible
-		glfwShowWindow(window);
+		glfwShowWindow(this.window);
 
 		GLCapabilities caps = GL.createCapabilities();
 		if (!caps.OpenGL30) {
 			throw new IllegalStateException(
 					"This game requires openGl 3.0 to run");
 		}
+	}
+
+	public boolean isClosing() {
+		return glfwWindowShouldClose(this.window);
+	}
+
+	public void update() {
+		glfwSwapBuffers(this.window);
+		glfwPollEvents();
+	}
+
+	public boolean isVSyncEnabled() {
+		return true;
 	}
 
 }

@@ -1,12 +1,14 @@
 package ch.wados.starfury;
 
 import ch.wados.starfury.controller.GameController;
-import ch.wados.starfury.controller.GuiController;
+import ch.wados.starfury.controller.SceneManager;
+import ch.wados.starfury.view.Window;
 
 public class GameLauncher {
 
-	private GuiController guiController;
+	private Window window;
 	private GameController gameController;
+	private SceneManager sceneManager;
 
 	public static void main(String[] args) {
 		new GameLauncher();
@@ -18,15 +20,18 @@ public class GameLauncher {
 	}
 
 	private void start() {
-		this.guiController.openWindow();
-		this.gameController.load();
-		this.gameController.startGame();
+		this.window.openWindow();
+
+		this.sceneManager.changeToScene("Game");
 	}
 
 	private void buildUpComponents() {
-		this.guiController = new GuiController();
+		this.window = new Window();
+		this.sceneManager = new SceneManager(this.window);
 
-		this.gameController = new GameController(this.guiController);
+		this.gameController = new GameController();
+
+		this.sceneManager.addScene(this.gameController, "Game");
 	}
 
 }
