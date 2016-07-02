@@ -23,10 +23,6 @@ import org.dyn4j.geometry.Convex;
  * but detected.
  * </p>
  * 
- * @author Andreas Wälchli
- * @version 1.4 - 2016/06/30
- * @since StarFury 0.0.1
- * 
  * @see Convex
  * @see PhysicsEntity
  * @see CollisionListener
@@ -44,57 +40,6 @@ public final class FixtureDefinition implements Lockable {
 	private boolean isLocked;
 
 	/**
-	 * Creates a new FixtureDefinition instance for a given shape, density
-	 * coefficient and identifier.
-	 * 
-	 * @param shape
-	 *            the convex shape. May not be {@code null}.
-	 * @param density
-	 *            the density coefficient. Must be positive and finite.
-	 * @param friction
-	 *            the friction coefficient. Must be positive or zero and finite.
-	 * @param restitution
-	 *            the restitution coefficient. Must be in the range [0,1].
-	 * @param isSensor
-	 *            indicates if the fixture is a sensor.
-	 * @param id
-	 *            the identifier string. May be {@code null} if no identifier
-	 *            should be used. May not be an empty String.
-	 * @throws NullPointerException
-	 *             if the {@code shape} parameter is {@code null}.
-	 * @throws IllegalArgumentException
-	 *             if the {@code density} is negative or not finite or the
-	 *             {@code id} is an empty String or the {@code friction} is
-	 *             negative or not finite or the {@code restitution} is not in
-	 *             the range [0,1].
-	 * @deprecated since 0.0.1 - use constructor
-	 *             {@link #FixtureDefinition(Convex)} and setter chaining
-	 */
-	@Deprecated
-	public FixtureDefinition(Convex shape, double density, double friction, double restitution, boolean isSensor,
-			String id) {
-		// validate
-		if (shape == null)
-			throw new NullPointerException("shape may not be null");
-		if (density < 0 || !Double.isFinite(density))
-			throw new IllegalArgumentException("density coefficient must be strictly positive. Was " + density);
-		if (friction < 0 || !Double.isFinite(friction))
-			throw new IllegalArgumentException("friction coefficient must be positive. Was " + density);
-		if (restitution < 0 || restitution > 1)
-			throw new IllegalArgumentException("restitution coefficient must be in the range [0,1]. Was " + density);
-		if (id != null && id.isEmpty())
-			throw new IllegalArgumentException("id may not be an empty String. use null instead");
-		// apply values
-		this.shape = shape;
-		this.density = density;
-		this.restitution = restitution;
-		this.friction = friction;
-		this.id = id;
-		this.isSensor = isSensor;
-		this.isLocked = false;
-	}
-
-	/**
 	 * Creates a new FixtureDefinition instance for a given shape with default
 	 * configuration. Change configuration with setters. The default values are:
 	 * <ul>
@@ -109,7 +54,6 @@ public final class FixtureDefinition implements Lockable {
 	 *            the convex shape. May not be {@code null}.
 	 * @throws NullPointerException
 	 *             if the {@code shape} is {@code null}.
-	 * @since 1.3 (StarFury 0.0.1)
 	 */
 	public FixtureDefinition(Convex shape) {
 		// validate
@@ -133,7 +77,6 @@ public final class FixtureDefinition implements Lockable {
 	 *            the original definition. May not be {@code null}.
 	 * @throws NullPointerException
 	 *             if the {@code def} is {@code null}.
-	 * @since 1.3 (StarFury 0.0.1)
 	 */
 	public FixtureDefinition(FixtureDefinition def) {
 		// validate
@@ -149,12 +92,6 @@ public final class FixtureDefinition implements Lockable {
 		this.isLocked = false;
 	}
 
-	/**
-	 * Locks the instance. After a call to this method any attempt to modify the
-	 * object through a setter will result in an {@link IllegalStateException}.
-	 * 
-	 * @since 1.3 (StarFury 0.0.1)
-	 */
 	public void lock() {
 		this.isLocked = true;
 	}
@@ -169,7 +106,6 @@ public final class FixtureDefinition implements Lockable {
 	 *             if the {@code shape} is {@code null}.
 	 * @throws IllegalStateException
 	 *             if the instance is locked.
-	 * @since 1.3 (StarFury 0.0.1)
 	 */
 	public FixtureDefinition setShape(Convex shape) {
 		this.enforceLock();
@@ -190,8 +126,7 @@ public final class FixtureDefinition implements Lockable {
 	 * @throws IllegalArgumentException
 	 *             if the density coefficient is negative or not finite.
 	 * @throws IllegalStateException
-	 *             if the instance is locked;
-	 * @since 1.3 (StarFury 0.0.1)
+	 *             if the instance is locked.
 	 */
 	public FixtureDefinition setDensityCoefficient(double density) {
 		this.enforceLock();
@@ -212,7 +147,6 @@ public final class FixtureDefinition implements Lockable {
 	 *             if the {@code friction} is negative or not finite.
 	 * @throws IllegalStateException
 	 *             if the instance is locked.
-	 * @since 1.3 (StarFury 0.0.1)
 	 */
 	public FixtureDefinition setFrictionCoefficient(double friction) {
 		this.enforceLock();
@@ -234,7 +168,6 @@ public final class FixtureDefinition implements Lockable {
 	 *             if the restitution coefficient is no in range [0,1].
 	 * @throws IllegalStateException
 	 *             if the instance is locked.
-	 * @since 1.3 (StarFury 0.0.1)
 	 */
 	public FixtureDefinition setRestitutionCoefficient(double restitution) {
 		this.enforceLock();
@@ -257,7 +190,6 @@ public final class FixtureDefinition implements Lockable {
 	 *             if the {@code id} is an empty string.
 	 * @throws IllegalStateException
 	 *             if the instance is locked.
-	 * @since 1.3 (StarFury 0.0.1)
 	 */
 	public FixtureDefinition setIdentifier(String id) {
 		this.enforceLock();
@@ -277,7 +209,6 @@ public final class FixtureDefinition implements Lockable {
 	 * @return itself
 	 * @throws IllegalStateException
 	 *             if the instance is locked.
-	 * @since 1.3 (StarFury 0.0.1)
 	 */
 	public FixtureDefinition setSensor(boolean isSensor) {
 		this.enforceLock();
@@ -289,7 +220,6 @@ public final class FixtureDefinition implements Lockable {
 	 * indicates the locking state of the instance.
 	 * 
 	 * @return {@code true} if the instance is locked.
-	 * @since 1.3 (StarFury 0.0.1)
 	 */
 	public boolean isLocked() {
 		return this.isLocked;
@@ -330,8 +260,6 @@ public final class FixtureDefinition implements Lockable {
 	 * </p>
 	 * 
 	 * {@inheritDoc}
-	 * 
-	 * @since 1.2 (StarFury 0.0.1)
 	 */
 	@Override
 	public int hashCode() {
@@ -360,8 +288,6 @@ public final class FixtureDefinition implements Lockable {
 	 * </p>
 	 * 
 	 * {@inheritDoc}
-	 * 
-	 * @since 1.2 (StarFury 0.0.1)
 	 */
 	@Override
 	public boolean equals(Object obj) {

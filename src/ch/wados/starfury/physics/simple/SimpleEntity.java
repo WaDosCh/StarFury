@@ -30,10 +30,6 @@ import ch.wados.starfury.physics.api.UpdateListener;
 /**
  * Simple Entity
  * 
- * @author Andreas Wälchli
- * @version 1.1 - 2016/06/14
- * @since StarFury 0.0.1
- * 
  * @see PhysicsEntity
  */
 class SimpleEntity implements PhysicsEntity {
@@ -96,7 +92,8 @@ class SimpleEntity implements PhysicsEntity {
 	}
 
 	@Override
-	public boolean filterCollision(PhysicsEntity entity0, String fixture0, PhysicsEntity entity1, String fixture1) {
+	public boolean filterCollision(PhysicsEntity entity0, String fixture0,
+			PhysicsEntity entity1, String fixture1) {
 		if (entity0 != this && entity1 != this)
 			return true;
 		boolean result = true;
@@ -115,8 +112,8 @@ class SimpleEntity implements PhysicsEntity {
 	}
 
 	@Override
-	public boolean collision(PhysicsEntity entity0, String fixture0, PhysicsEntity entity1, String fixture1,
-			double toi) {
+	public boolean collision(PhysicsEntity entity0, String fixture0,
+			PhysicsEntity entity1, String fixture1, double toi) {
 		if (entity0 != this && entity1 != this)
 			return true;
 		boolean result = true;
@@ -138,7 +135,8 @@ class SimpleEntity implements PhysicsEntity {
 		if (fixture.getIdentifier() != null) {
 			for (BodyFixture f : this.body.getFixtures())
 				if (id.equals(f.getUserData()))
-					throw new IllegalArgumentException("fixture id [" + id + "] already in use");
+					throw new IllegalArgumentException(
+							"fixture id [" + id + "] already in use");
 		}
 		this.buildFixture(fixture);
 		this.recalculateCoM();
@@ -147,6 +145,7 @@ class SimpleEntity implements PhysicsEntity {
 
 	@Override
 	public void addThrustPoint(ThrustPointDefinition thruster) {
+		// duplicate keys handled by thruster system
 		this.thrusters.addThruster(thruster);
 	}
 
@@ -155,10 +154,13 @@ class SimpleEntity implements PhysicsEntity {
 		Objects.requireNonNull(position);
 		Objects.requireNonNull(force);
 		if (force.isZero())
-			throw new IllegalArgumentException("force may not be the zero vector");
+			throw new IllegalArgumentException(
+					"force may not be the zero vector");
 		if (duration < 0 || !Double.isFinite(duration))
 			throw new IllegalArgumentException("duration must be positive");
-		this.body.applyTorque(new TimedTorque(this.body.getWorldCenter().to(position).cross(force), duration));
+		this.body.applyTorque(new TimedTorque(
+				this.body.getWorldCenter().to(position).cross(force),
+				duration));
 	}
 
 	@Override
@@ -166,7 +168,8 @@ class SimpleEntity implements PhysicsEntity {
 		Objects.requireNonNull(position);
 		Objects.requireNonNull(impulse);
 		if (impulse.isZero())
-			throw new IllegalArgumentException("impulse may not be the zero vector");
+			throw new IllegalArgumentException(
+					"impulse may not be the zero vector");
 		this.body.applyImpulse(impulse, position);
 	}
 
@@ -212,7 +215,8 @@ class SimpleEntity implements PhysicsEntity {
 
 	@Override
 	public List<Convex> getShapes() {
-		return this.body.getFixtures().stream().map(BodyFixture::getShape).collect(Collectors.toList());
+		return this.body.getFixtures().stream().map(BodyFixture::getShape)
+				.collect(Collectors.toList());
 	}
 
 	@Override
@@ -240,7 +244,8 @@ class SimpleEntity implements PhysicsEntity {
 		for (BodyFixture f : this.body.getFixtures())
 			if (id.equals(f.getUserData()))
 				return f.isSensor();
-		throw new IllegalArgumentException("fixture not found for id [" + id + "]");
+		throw new IllegalArgumentException(
+				"fixture not found for id [" + id + "]");
 	}
 
 	@Override
@@ -253,7 +258,8 @@ class SimpleEntity implements PhysicsEntity {
 			if (id.equals(f.getUserData()))
 				fx = f;
 		if (fx == null)
-			throw new IllegalArgumentException("fixture not found for id [" + id + "]");
+			throw new IllegalArgumentException(
+					"fixture not found for id [" + id + "]");
 		this.body.removeFixture(fx);
 		this.callback.run();
 	}
@@ -278,7 +284,8 @@ class SimpleEntity implements PhysicsEntity {
 		if (this.type == EntityType.STATIC)
 			return;
 		Mass oldMass = this.body.getMass();
-		this.body.setMass(new Mass(oldMass.getCenter(), mass, oldMass.getInertia() * mass / oldMass.getMass()));
+		this.body.setMass(new Mass(oldMass.getCenter(), mass,
+				oldMass.getInertia() * mass / oldMass.getMass()));
 		this.thrusters.update(oldMass.getCenter());
 	}
 
@@ -306,7 +313,8 @@ class SimpleEntity implements PhysicsEntity {
 				this.callback.run();
 				return;
 			}
-		throw new IllegalArgumentException("fixture not found for id [" + id + "]");
+		throw new IllegalArgumentException(
+				"fixture not found for id [" + id + "]");
 	}
 
 	@Override
@@ -356,7 +364,7 @@ class SimpleEntity implements PhysicsEntity {
 	private final static Runnable NULL_RUNNABLE = () -> {
 	};
 
-	final Body body;
+	private final Body body;
 	private final ThrusterSystem thrusters;
 	private final EntityType type;
 	private Runnable callback = NULL_RUNNABLE;
@@ -372,19 +380,27 @@ class SimpleEntity implements PhysicsEntity {
 		List<ThrustPointDefinition> thrusts = def.getThrustPoints();
 
 		this.body = new Body(fixtures.size());
-		this.body.rotate(def.getInitialOrientation());
-		this.body.translate(def.getInitialPosition());
+		this.body.setUserData(this);
+		this.body.rotate(def.getOrientation());
+		this.body.translate(def.getPosition());
 		this.thrusters = new ThrusterSystem(thrusts.size());
-		this.type = def.getEntityType();
+		this.type = def.getType();
 
 		for (FixtureDefinition f : fixtures)
 			this.buildFixture(f);
 
 		this.recalculateCoM();
-		this.setMass(def.getInitialMass());
+		this.setMass(def.getMass());
+
+		this.body.setLinearDamping(def.getLinearDampening());
+		this.body.setAngularDamping(def.getAngularDampening());
 
 		for (ThrustPointDefinition t : thrusts)
 			this.thrusters.addThruster(t);
+	}
+
+	Body getBody() {
+		return this.body;
 	}
 
 	static class TimedForce extends Force {

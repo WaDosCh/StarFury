@@ -1,5 +1,7 @@
 package ch.wados.starfury.physics.api;
 
+import java.util.List;
+
 import org.dyn4j.geometry.Vector2;
 
 /**
@@ -61,8 +63,7 @@ public interface PhysicsManager extends Listenable {
 	Vector2 getGravity();
 
 	/**
-	 * Initialises the internal physics engine with a given gravity vector and a
-	 * predefined default capacity. By default this capacity is 32.
+	 * Initialises the internal physics engine with a given gravity vector.
 	 * 
 	 * @param gravity
 	 *            the gravity vector. May not be {@code null}. Use the zero
@@ -74,29 +75,7 @@ public interface PhysicsManager extends Listenable {
 	 * 
 	 * @see #initialiseWorld(Vector2, int)
 	 */
-	default void initialiseWorld(Vector2 gravity) {
-		this.initialiseWorld(gravity, 32);
-	}
-
-	/**
-	 * Initialises the internal physics engine with a given gravity vector and
-	 * initial capacity. This initial capacity can be exceeded at any time, it
-	 * only serves as an optimisation possibility to reduce list expansion
-	 * overhead.
-	 * 
-	 * @param gravity
-	 *            the gravity vector. May not be {@code null}. Use the zero
-	 *            vector if no gravity is wanted.
-	 * @param initialCapacity
-	 *            the initial capacity of the world. Must be strictly positive.
-	 * @throws NullPointerException
-	 *             if the {@code gravity} is {@code null}.
-	 * @throws IllegalArgumentException
-	 *             if the {@code initialCapacity} is less than or equal to zero.
-	 * @throws IllegalStateException
-	 *             if the world has already been initialised.
-	 */
-	void initialiseWorld(Vector2 gravity, int initialCapacity);
+	void initialiseWorld(Vector2 gravity);
 
 	/**
 	 * Sets the world gravity.
@@ -165,10 +144,20 @@ public interface PhysicsManager extends Listenable {
 	 */
 	default void stepWorld(double totalTime, int substeps) {
 		if (substeps <= 0)
-			throw new IllegalArgumentException("substep count must be positive");
+			throw new IllegalArgumentException(
+					"substep count must be positive");
 		final double stepTime = totalTime / substeps;
 		for (int i = 0; i < substeps; i++)
 			stepWorld(stepTime);
 	}
+
+	/**
+	 * Provides a full list of all currently spawned entities. The contents of
+	 * this list may change over time, but it should be enough for some basic
+	 * interaction.
+	 * 
+	 * @return a list of all entities currently spawned.
+	 */
+	List<PhysicsEntity> getSpawnedEntities();
 
 }

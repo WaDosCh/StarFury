@@ -3,6 +3,7 @@ package ch.wados.starfury.physics.api;
 import java.util.ArrayList;
 import java.util.Collections;
 import java.util.List;
+import java.util.Objects;
 
 import org.dyn4j.geometry.Vector2;
 
@@ -11,10 +12,6 @@ import org.dyn4j.geometry.Vector2;
  * the physics engine. A definition object contains all relevant information for
  * constructing an entity from scratch. A definition object can be used for
  * construction of multiple entities.
- * 
- * @author Andreas Wälchli
- * @version 1.3 - 2016/07/01
- * @since StarFury 0.0.1
  * 
  * @see Lockable
  */
@@ -47,131 +44,25 @@ public final class PhysicsEntityDefinition implements Lockable {
 		this.thrustpoints = new ArrayList<>();
 		this.ro_fixtures = Collections.unmodifiableList(this.fixtures);
 		this.ro_thrust = Collections.unmodifiableList(this.thrustpoints);
-	}
-
-	/**
-	 * Creates a new PhysicsEntityDefinition instance from a given type, mass
-	 * value, position and orientation.
-	 * <p>
-	 * Note that such an instance is not valid for entity creation. At least one
-	 * {@link FixtureDefinition} must be added.
-	 * </p>
-	 * 
-	 * @param type
-	 *            the entity type. May not be {@code null}.
-	 * @param mass
-	 *            the entity mass. May not be negative and must be finite.
-	 * @param position
-	 *            the initial position of the entity. May not be {@code null}.
-	 * @param orientation
-	 *            the initial orientation of the entity. Measured in radians.
-	 * @throws NullPointerException
-	 *             if {@code type} or {@code position} is {@code null}.
-	 * @throws IllegalArgumentException
-	 *             if {@code mass} is negative.
-	 * @throws IllegalArgumentException
-	 *             if {@code orientation} is non-finite.
-	 * @deprecated since 0.0.1 - use constructor
-	 *             {@link #PhysicsEntityDefinition(EntityType)} instead.
-	 */
-	@Deprecated
-	public PhysicsEntityDefinition(EntityType type, double mass, Vector2 position, double orientation) {
-		// validate input
-		if (type == null)
-			throw new NullPointerException("type may not be null");
-		if (mass < 0 || !Double.isFinite(mass))
-			throw new IllegalArgumentException("mass must be non-negative and finite");
-		if (!Double.isFinite(orientation))
-			throw new IllegalArgumentException("orientation must be finite");
-		if (position == null)
-			throw new NullPointerException("position may not be null");
-		// copy finals
-		this.type = type;
-		this.mass = mass;
-		this.orientation = orientation;
-		this.position = position;
-		// initialise lists
-		this.fixtures = new ArrayList<>();
-		this.thrustpoints = new ArrayList<>();
-		this.ro_fixtures = Collections.unmodifiableList(this.fixtures);
-		this.ro_thrust = Collections.unmodifiableList(this.thrustpoints);
-		this.angularDampening = 0.02;
 		this.linearDampening = 0;
+		this.angularDampening = 0.01;
 	}
 
-	/**
-	 * Adds a fixture.
-	 * 
-	 * @param fixture
-	 *            the fixture to add. May not be {@code null}.
-	 * @return itself (for chaining).
-	 * @throws NullPointerException
-	 *             if {@code fixture} is {@code null}.
-	 * @throws IllegalArgumentException
-	 *             if the {@code fixture} has an identifier that is equal to
-	 *             that of an already existing fixture.
-	 */
-	public PhysicsEntityDefinition addFixture(FixtureDefinition fixture) {
-		this.enforceLock();
-		// validate input
-		if (fixture == null)
-			throw new NullPointerException("fixture may not be null");
-		if (fixture.getIdentifier() != null && this.fixtures.stream().map(FixtureDefinition::getIdentifier)
-				.filter(f -> f.equals(fixture.getIdentifier())).count() > 0)
-			throw new IllegalArgumentException("fixture identifier already in use");
-		// add fixture
-		this.fixtures.add(fixture);
-		return this;
+	public PhysicsEntityDefinition(PhysicsEntityDefinition original) {
+		Objects.requireNonNull(original);
+		this.type = original.type;
+		this.mass = original.mass;
+		this.position = new Vector2(original.getPosition());
+		this.orientation = original.orientation;
+		this.fixtures = new ArrayList<>(original.fixtures);
+		this.ro_fixtures = Collections.unmodifiableList(this.fixtures);
+		this.thrustpoints = new ArrayList<>(original.thrustpoints);
+		this.ro_thrust = Collections.unmodifiableList(this.thrustpoints);
+		this.linearDampening = original.linearDampening;
+		this.angularDampening = original.angularDampening;
 	}
 
-	/**
-	 * Adds a thrust point.
-	 * 
-	 * @param thrustpoint
-	 *            the thrust point to add. May not be {@code null}.
-	 * @return itself (for chaining).
-	 * @throws NullPointerException
-	 *             if {@code fixture} is {@code null}.
-	 * @throws IllegalArgumentException
-	 *             if the {@code thrustpoint} has an identifier that is equal to
-	 *             that of an already existing thrust point.
-	 */
-	public PhysicsEntityDefinition addThrustPoint(ThrustPointDefinition thrustpoint) {
-		this.enforceLock();
-		// validate input
-		if (thrustpoint == null)
-			throw new NullPointerException("thrustpoint may not be null");
-		if (thrustpoint.getIdentifier() != null && this.thrustpoints.stream().map(ThrustPointDefinition::getIdentifier)
-				.filter(t -> t.equals(thrustpoint.getIdentifier())).count() > 0)
-			throw new IllegalArgumentException("thrustpoint identifier already in use");
-		// add thrustpoint
-		this.thrustpoints.add(thrustpoint);
-		return this;
-	}
-
-	public EntityType getEntityType() {
-		return this.type;
-	}
-
-	public double getInitialMass() {
-		return this.mass;
-	}
-
-	public List<FixtureDefinition> getFixtures() {
-		return this.ro_fixtures;
-	}
-
-	public Vector2 getInitialPosition() {
-		return this.position;
-	}
-
-	public double getInitialOrientation() {
-		return this.orientation;
-	}
-
-	public List<ThrustPointDefinition> getThrustPoints() {
-		return this.ro_thrust;
-	}
+	// LOCK MANAGEMENT
 
 	@Override
 	public void lock() {
@@ -181,6 +72,130 @@ public final class PhysicsEntityDefinition implements Lockable {
 	@Override
 	public boolean isLocked() {
 		return this.isLocked;
+	}
+
+	// ACCESSORS
+
+	public EntityType getType() {
+		return type;
+	}
+
+	public double getMass() {
+		return mass;
+	}
+
+	public List<FixtureDefinition> getFixtures() {
+		return ro_fixtures;
+	}
+
+	public List<ThrustPointDefinition> getThrustPoints() {
+		return ro_thrust;
+	}
+
+	public Vector2 getPosition() {
+		return position;
+	}
+
+	public double getOrientation() {
+		return orientation;
+	}
+
+	public double getLinearDampening() {
+		return linearDampening;
+	}
+
+	public double getAngularDampening() {
+		return angularDampening;
+	}
+
+	// SETTERS
+
+	public PhysicsEntityDefinition setType(EntityType type) {
+		this.enforceLock();
+		Objects.requireNonNull(type);
+		this.type = type;
+		return this;
+	}
+
+	public PhysicsEntityDefinition setMass(double mass) {
+		this.enforceLock();
+		if (mass < 0)
+			throw new IllegalArgumentException();
+		this.mass = mass;
+		return this;
+	}
+
+	public PhysicsEntityDefinition setPosition(Vector2 position) {
+		this.enforceLock();
+		Objects.requireNonNull(position);
+		this.position = new Vector2(position);
+		return this;
+	}
+
+	public PhysicsEntityDefinition setOrientation(double orientation) {
+		this.enforceLock();
+		this.orientation = ch.waan.math.Math.normalizedAngle(orientation);
+		return this;
+	}
+
+	public PhysicsEntityDefinition setLinearDampening(double linearDampening) {
+		this.enforceLock();
+		this.linearDampening = linearDampening;
+		return this;
+	}
+
+	public PhysicsEntityDefinition setAngularDampening(
+			double angularDampening) {
+		this.enforceLock();
+		this.angularDampening = angularDampening;
+		return this;
+	}
+
+	public PhysicsEntityDefinition setLocked(boolean isLocked) {
+		this.enforceLock();
+		this.isLocked = isLocked;
+		return this;
+	}
+
+	public PhysicsEntityDefinition clearFixtures() {
+		this.enforceLock();
+		this.fixtures.clear();
+		return this;
+	}
+
+	public PhysicsEntityDefinition clearThrusters() {
+		this.enforceLock();
+		this.thrustpoints.clear();
+		return this;
+	}
+
+	private final Object THRUST_LOCK = new Object();
+	private final Object FIXTURE_LOCK = new Object();
+
+	public PhysicsEntityDefinition addThrustPoint(ThrustPointDefinition def) {
+		this.enforceLock();
+		Objects.requireNonNull(def);
+		synchronized (THRUST_LOCK) {
+			if (this.thrustpoints.stream()
+					.filter(t -> def.getIdentifier().equals(t.getIdentifier()))
+					.count() > 0)
+				throw new IllegalArgumentException("duplicate id");
+			this.thrustpoints.add(def);
+		}
+		return this;
+	}
+
+	public PhysicsEntityDefinition addFixture(FixtureDefinition def) {
+		this.enforceLock();
+		Objects.requireNonNull(def);
+		synchronized (FIXTURE_LOCK) {
+			if (def.getIdentifier() != null && this.fixtures.stream()
+					.filter(f -> def.getIdentifier().equals(f.getIdentifier()))
+					.count() > 0)
+				throw new IllegalArgumentException("duplicate id");
+			this.fixtures.add(def);
+		}
+		return this;
 	}
 
 }
