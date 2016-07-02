@@ -54,100 +54,105 @@ import org.lwjgl.BufferUtils;
  */
 public class Texture {
 
-    /**
-     * Stores the handle of the texture.
-     */
-    private final int id;
+	/**
+	 * Stores the handle of the texture.
+	 */
+	private final int id;
 
-    /**
-     * Width of the texture.
-     */
-    private final int width;
-    /**
-     * Height of the texture.
-     */
-    private final int height;
+	/**
+	 * Width of the texture.
+	 */
+	private final int width;
+	/**
+	 * Height of the texture.
+	 */
+	private final int height;
 
-    /**
-     * Creates a texture with specified width, height and data.
-     *
-     * @param width  Width of the texture
-     * @param height Height of the texture
-     * @param data   Picture Data in RGBA format
-     */
-    public Texture(int width, int height, ByteBuffer data) {
-        id = glGenTextures();
-        this.width = width;
-        this.height = height;
+	/**
+	 * Creates a texture with specified width, height and data.
+	 *
+	 * @param width
+	 *            Width of the texture
+	 * @param height
+	 *            Height of the texture
+	 * @param data
+	 *            Picture Data in RGBA format
+	 */
+	public Texture(int width, int height, ByteBuffer data) {
+		id = glGenTextures();
+		this.width = width;
+		this.height = height;
 
-        glBindTexture(GL_TEXTURE_2D, id);
+		glBindTexture(GL_TEXTURE_2D, id);
 
-        glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_WRAP_S, GL_CLAMP_TO_BORDER);
-        glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_WRAP_T, GL_CLAMP_TO_BORDER);
-        glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MIN_FILTER, GL_NEAREST);
-        glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MAG_FILTER, GL_NEAREST);
+		glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_WRAP_S, GL_CLAMP_TO_BORDER);
+		glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_WRAP_T, GL_CLAMP_TO_BORDER);
+		glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MIN_FILTER, GL_NEAREST);
+		glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MAG_FILTER, GL_NEAREST);
 
-        glTexImage2D(GL_TEXTURE_2D, 0, GL_RGBA8, width, height, 0, GL_RGBA, GL_UNSIGNED_BYTE, data);
-    }
+		glTexImage2D(GL_TEXTURE_2D, 0, GL_RGBA8, width, height, 0, GL_RGBA,
+				GL_UNSIGNED_BYTE, data);
+	}
 
-    /**
-     * Binds the texture.
-     */
-    public void bind() {
-        glBindTexture(GL_TEXTURE_2D, id);
-    }
+	/**
+	 * Binds the texture.
+	 */
+	public void bind() {
+		glBindTexture(GL_TEXTURE_2D, id);
+	}
 
-    /**
-     * Delete the texture.
-     */
-    public void delete() {
-        glDeleteTextures(id);
-    }
+	/**
+	 * Delete the texture.
+	 */
+	public void delete() {
+		glDeleteTextures(id);
+	}
 
-    /**
-     * Gets the texture width.
-     *
-     * @return Texture width
-     */
-    public int getWidth() {
-        return width;
-    }
+	/**
+	 * Gets the texture width.
+	 *
+	 * @return Texture width
+	 */
+	public int getWidth() {
+		return width;
+	}
 
-    /**
-     * Gets the texture height.
-     *
-     * @return Texture height
-     */
-    public int getHeight() {
-        return height;
-    }
+	/**
+	 * Gets the texture height.
+	 *
+	 * @return Texture height
+	 */
+	public int getHeight() {
+		return height;
+	}
 
-    /**
-     * Load texture from file.
-     *
-     * @param path File path of the texture
-     *
-     * @return Texture from specified file
-     */
-    public static Texture loadTexture(String path) {
-        /* Prepare image buffers */
-        IntBuffer w = BufferUtils.createIntBuffer(1);
-        IntBuffer h = BufferUtils.createIntBuffer(1);
-        IntBuffer comp = BufferUtils.createIntBuffer(1);
+	/**
+	 * Load texture from file.
+	 *
+	 * @param path
+	 *            File path of the texture
+	 *
+	 * @return Texture from specified file
+	 */
+	public static Texture loadTexture(String path) {
+		/* Prepare image buffers */
+		IntBuffer w = BufferUtils.createIntBuffer(1);
+		IntBuffer h = BufferUtils.createIntBuffer(1);
+		IntBuffer comp = BufferUtils.createIntBuffer(1);
 
-        /* Load image */
-        stbi_set_flip_vertically_on_load(1);
-        ByteBuffer image = stbi_load(path, w, h, comp, 4);
-        if (image == null) {
-            throw new RuntimeException("Failed to load a texture file!"
-                                       + System.lineSeparator() + stbi_failure_reason());
-        }
+		/* Load image */
+		stbi_set_flip_vertically_on_load(1);
+		ByteBuffer image = stbi_load("data/" + path, w, h, comp, 4);
+		if (image == null) {
+			throw new RuntimeException("Failed to load a texture file!"
+					+ System.lineSeparator() + stbi_failure_reason());
+		}
 
-        /* Get width and height of image */
-        int width = w.get();
-        int height = h.get();
+		/* Get width and height of image */
+		int width = w.get();
+		int height = h.get();
 
-        return new Texture(width, height, image);
-    }
+		return new Texture(width, height, image);
+	}
 
 }
