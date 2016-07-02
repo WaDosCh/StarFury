@@ -156,7 +156,7 @@ public abstract class Game {
 			stateMachine.add("texture", new LegacyTextureState());
 		}
 		stateMachine.add("game", new GameState(renderer));
-		stateMachine.change("texture");
+		stateMachine.change("example");
 	}
 
 	/**

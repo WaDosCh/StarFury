@@ -58,7 +58,7 @@ public class TextureState implements State {
     private Texture texture;
     private Shader vertexShader;
     private Shader fragmentShader;
-    private ShaderProgram program;
+    private ShaderProgram shaderProgram;
 
     @Override
     public void input() {
@@ -76,7 +76,7 @@ public class TextureState implements State {
 
         vao.bind();
         texture.bind();
-        program.use();
+        shaderProgram.use();
 
         glDrawElements(GL_TRIANGLES, 6, GL_UNSIGNED_INT, 0);
     }
@@ -134,33 +134,33 @@ public class TextureState implements State {
         fragmentShader = Shader.loadShader(GL_FRAGMENT_SHADER, "resources/default.frag");
 
         /* Create shader program */
-        program = new ShaderProgram();
-        program.attachShader(vertexShader);
-        program.attachShader(fragmentShader);
-        program.bindFragmentDataLocation(0, "fragColor");
-        program.link();
-        program.use();
+        shaderProgram = new ShaderProgram();
+        shaderProgram.attachShader(vertexShader);
+        shaderProgram.attachShader(fragmentShader);
+        shaderProgram.bindFragmentDataLocation(0, "fragColor");
+        shaderProgram.link();
+        shaderProgram.use();
 
         specifyVertexAttributes();
 
         /* Set texture uniform */
-        int uniTex = program.getUniformLocation("texImage");
-        program.setUniform(uniTex, 0);
+        int uniTex = shaderProgram.getUniformLocation("texImage");
+        shaderProgram.setUniform(uniTex, 0);
 
         /* Set model matrix to identity matrix */
         Matrix4f model = new Matrix4f();
-        int uniModel = program.getUniformLocation("model");
-        program.setUniform(uniModel, model);
+        int uniModel = shaderProgram.getUniformLocation("model");
+        shaderProgram.setUniform(uniModel, model);
 
         /* Set view matrix to identity matrix */
         Matrix4f view = new Matrix4f();
-        int uniView = program.getUniformLocation("view");
-        program.setUniform(uniView, view);
+        int uniView = shaderProgram.getUniformLocation("view");
+        shaderProgram.setUniform(uniView, view);
 
         /* Set projection matrix to an orthographic projection */
         Matrix4f projection = Matrix4f.orthographic(0f, width, 0f, height, -1f, 1f);
-        int uniProjection = program.getUniformLocation("projection");
-        program.setUniform(uniProjection, projection);
+        int uniProjection = shaderProgram.getUniformLocation("projection");
+        shaderProgram.setUniform(uniProjection, projection);
     }
 
     @Override
@@ -171,7 +171,7 @@ public class TextureState implements State {
         texture.delete();
         vertexShader.delete();
         fragmentShader.delete();
-        program.delete();
+        shaderProgram.delete();
     }
 
     /**
@@ -179,19 +179,19 @@ public class TextureState implements State {
      */
     private void specifyVertexAttributes() {
         /* Specify Vertex Pointer */
-        int posAttrib = program.getAttributeLocation("position");
-        program.enableVertexAttribute(posAttrib);
-        program.pointVertexAttribute(posAttrib, 2, 7 * Float.BYTES, 0);
+        int posAttrib = shaderProgram.getAttributeLocation("position");
+        shaderProgram.enableVertexAttribute(posAttrib);
+        shaderProgram.pointVertexAttribute(posAttrib, 2, 7 * Float.BYTES, 0);
 
         /* Specify Color Pointer */
-        int colAttrib = program.getAttributeLocation("color");
-        program.enableVertexAttribute(colAttrib);
-        program.pointVertexAttribute(colAttrib, 3, 7 * Float.BYTES, 2 * Float.BYTES);
+        int colAttrib = shaderProgram.getAttributeLocation("color");
+        shaderProgram.enableVertexAttribute(colAttrib);
+        shaderProgram.pointVertexAttribute(colAttrib, 3, 7 * Float.BYTES, 2 * Float.BYTES);
 
         /* Specify Texture Pointer */
-        int texAttrib = program.getAttributeLocation("texcoord");
-        program.enableVertexAttribute(texAttrib);
-        program.pointVertexAttribute(texAttrib, 2, 7 * Float.BYTES, 5 * Float.BYTES);
+        int texAttrib = shaderProgram.getAttributeLocation("texcoord");
+        shaderProgram.enableVertexAttribute(texAttrib);
+        shaderProgram.pointVertexAttribute(texAttrib, 2, 7 * Float.BYTES, 5 * Float.BYTES);
     }
 
 }

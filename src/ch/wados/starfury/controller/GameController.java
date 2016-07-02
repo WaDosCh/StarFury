@@ -43,11 +43,10 @@ public class GameController implements Scene {
 		this.manager = manager;
 		this.physicsManager.initialiseWorld(new Vector2(0, 0));
 
-		this.shader = ShaderFactory.createShader(
-				"resource/shaders/texture_vertex.vs",
-				"resource/shaders/texture_fragment.fs");
-		this.renderer = new SpriteRenderer(
-				Texture.loadTexture("resource/test.png"), shader, 0.5f, 0.5f);
+		this.shader = ShaderFactory.createShader("texture_vertex.vs",
+				"texture_fragment.fs");
+		this.renderer = new SpriteRenderer(Texture.loadTexture("test.png"),
+				shader, 0.5f, 0.5f);
 
 		this.loop();
 	}
@@ -100,7 +99,7 @@ public class GameController implements Scene {
 		GL11.glClear(GL11.GL_COLOR_BUFFER_BIT);
 
 		this.renderer.render(new Matrix4f(), new Matrix4f());
-		
+
 		this.manager.getWindow().update();
 
 		// TODO Auto-generated method stub
