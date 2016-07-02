@@ -103,10 +103,8 @@ public class Window {
 
 		// Get the resolution of the primary monitor
 		long monitor = glfwGetPrimaryMonitor();
-		System.out.println(monitor);
 		GLFWVidMode vidmode = glfwGetVideoMode(monitor);
-		System.out.println(vidmode.width() + " / " + vidmode.height());
-
+		
 		// Create the window
 		this.window = glfwCreateWindow(vidmode.width(), vidmode.height(),
 				"StarFury v.0", monitor, NULL);
