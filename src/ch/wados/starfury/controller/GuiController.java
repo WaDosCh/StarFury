@@ -11,6 +11,7 @@ import static org.lwjgl.system.MemoryUtil.NULL;
 import org.lwjgl.glfw.GLFWErrorCallback;
 import org.lwjgl.glfw.GLFWVidMode;
 import org.lwjgl.opengl.GL;
+import org.lwjgl.opengl.GLCapabilities;
 
 public class GuiController {
 
@@ -25,21 +26,25 @@ public class GuiController {
 	}
 
 	public void startLoop() {
-		// Set the clear color
-		glClearColor(0.2f, 0.2f, 0.2f, 0.0f);
+		try {
+			// Set the clear color
+			glClearColor(0.2f, 0.2f, 0.2f, 0.0f);
 
-		// Run the rendering loop until the user has attempted to close
-		// the window or has pressed the ESCAPE key.
-		while (!glfwWindowShouldClose(window)) {
-			glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT); // clear the
-																// framebuffer
-			this.renderingManager.draw();
+			// Run the rendering loop until the user has attempted to close
+			// the window or has pressed the ESCAPE key.
+			while (!glfwWindowShouldClose(window)) {
+				glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT); // clear the
+																	// framebuffer
+				this.renderingManager.draw();
 
-			glfwSwapBuffers(window); // swap the color buffers
+				glfwSwapBuffers(window); // swap the color buffers
 
-			// Poll for window events. The key callback above will only be
-			// invoked during this call.
-			glfwPollEvents();
+				// Poll for window events. The key callback above will only be
+				// invoked during this call.
+				glfwPollEvents();
+			}
+		} finally {
+			glfwTerminate();
 		}
 	}
 
@@ -63,13 +68,13 @@ public class GuiController {
 		if (isOpened())
 			throw new IllegalStateException("Window is already opened");
 
-		// Setup an error callback. The default implementation
-		// will print the error message in System.err.
-		GLFWErrorCallback.createPrint(System.err).set();
-
 		// Initialize GLFW. Most GLFW functions will not work before doing this.
 		if (!glfwInit())
 			throw new IllegalStateException("Unable to initialize GLFW");
+
+		// Setup an error callback. The default implementation
+		// will print the error message in System.err.
+		GLFWErrorCallback.createPrint(System.err).set();
 
 		// Configure our window
 		// optional, the current window hints are already the default
@@ -77,13 +82,15 @@ public class GuiController {
 		// the window will stay hidden after creation
 		glfwWindowHint(GLFW_VISIBLE, GLFW_FALSE);
 		glfwWindowHint(GLFW_RESIZABLE, GLFW_FALSE);
+		glfwWindowHint(GLFW_SAMPLES, 4);
 
 		// Get the resolution of the primary monitor
-		GLFWVidMode vidmode = glfwGetVideoMode(glfwGetPrimaryMonitor());
+		long monitor = glfwGetPrimaryMonitor();
+		GLFWVidMode vidmode = glfwGetVideoMode(monitor);
 
 		// Create the window
 		this.window = glfwCreateWindow(vidmode.width(), vidmode.height(),
-				"StarFury v.0", NULL, NULL);
+				"StarFury v.0", monitor, NULL);
 		if (this.window == NULL)
 			throw new RuntimeException("Failed to create the GLFW window");
 
@@ -102,6 +109,12 @@ public class GuiController {
 
 		// Make the window visible
 		glfwShowWindow(window);
+
+		GLCapabilities caps = GL.createCapabilities();
+		if (!caps.OpenGL30) {
+			throw new IllegalStateException(
+					"This game requires openGl 3.0 to run");
+		}
 	}
 
 }
