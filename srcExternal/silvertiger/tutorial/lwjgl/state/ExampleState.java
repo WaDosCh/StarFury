@@ -81,7 +81,7 @@ public class ExampleState implements State {
     private VertexBufferObject vbo;
     private Shader vertexShader;
     private Shader fragmentShader;
-    private ShaderProgram program;
+    private ShaderProgram shaderProgram;
 
     private int uniModel;
     private float previousAngle = 0f;
@@ -104,11 +104,11 @@ public class ExampleState implements State {
         glClear(GL_COLOR_BUFFER_BIT);
 
         vao.bind();
-        program.use();
+        shaderProgram.use();
 
         float lerpAngle = (1f - alpha) * previousAngle + alpha * angle;
         Matrix4f model = Matrix4f.rotate(lerpAngle, 0f, 0f, 1f);
-        program.setUniform(uniModel, model);
+        shaderProgram.setUniform(uniModel, model);
 
         glDrawArrays(GL_TRIANGLES, 0, 3);
     }
@@ -136,22 +136,22 @@ public class ExampleState implements State {
         fragmentShader = new Shader(GL_FRAGMENT_SHADER, fragmentSource);
 
         /* Create shader program */
-        program = new ShaderProgram();
-        program.attachShader(vertexShader);
-        program.attachShader(fragmentShader);
-        program.bindFragmentDataLocation(0, "fragColor");
-        program.link();
-        program.use();
+        shaderProgram = new ShaderProgram();
+        shaderProgram.attachShader(vertexShader);
+        shaderProgram.attachShader(fragmentShader);
+        shaderProgram.bindFragmentDataLocation(0, "fragColor");
+        shaderProgram.link();
+        shaderProgram.use();
 
         specifyVertexAttributes();
 
         /* Get uniform location for the model matrix */
-        uniModel = program.getUniformLocation("model");
+        uniModel = shaderProgram.getUniformLocation("model");
 
         /* Set view matrix to identity matrix */
         Matrix4f view = new Matrix4f();
-        int uniView = program.getUniformLocation("view");
-        program.setUniform(uniView, view);
+        int uniView = shaderProgram.getUniformLocation("view");
+        shaderProgram.setUniform(uniView, view);
 
         /* Get width and height for calculating the ratio */
         long window = GLFW.glfwGetCurrentContext();
@@ -162,8 +162,8 @@ public class ExampleState implements State {
 
         /* Set projection matrix to an orthographic projection */
         Matrix4f projection = Matrix4f.orthographic(-ratio, ratio, -1f, 1f, -1f, 1f);
-        int uniProjection = program.getUniformLocation("projection");
-        program.setUniform(uniProjection, projection);
+        int uniProjection = shaderProgram.getUniformLocation("projection");
+        shaderProgram.setUniform(uniProjection, projection);
     }
 
     @Override
@@ -172,7 +172,7 @@ public class ExampleState implements State {
         vbo.delete();
         vertexShader.delete();
         fragmentShader.delete();
-        program.delete();
+        shaderProgram.delete();
     }
 
     /**
@@ -180,14 +180,14 @@ public class ExampleState implements State {
      */
     private void specifyVertexAttributes() {
         /* Specify Vertex Pointer */
-        int posAttrib = program.getAttributeLocation("position");
-        program.enableVertexAttribute(posAttrib);
-        program.pointVertexAttribute(posAttrib, 3, 6 * Float.BYTES, 0);
+        int posAttrib = shaderProgram.getAttributeLocation("position");
+        shaderProgram.enableVertexAttribute(posAttrib);
+        shaderProgram.pointVertexAttribute(posAttrib, 3, 6 * Float.BYTES, 0);
 
         /* Specify Color Pointer */
-        int colAttrib = program.getAttributeLocation("color");
-        program.enableVertexAttribute(colAttrib);
-        program.pointVertexAttribute(colAttrib, 3, 6 * Float.BYTES, 3 * Float.BYTES);
+        int colAttrib = shaderProgram.getAttributeLocation("color");
+        shaderProgram.enableVertexAttribute(colAttrib);
+        shaderProgram.pointVertexAttribute(colAttrib, 3, 6 * Float.BYTES, 3 * Float.BYTES);
     }
 
 }
