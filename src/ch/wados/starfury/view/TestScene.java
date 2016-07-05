@@ -1,6 +1,7 @@
 package ch.wados.starfury.view;
 
 import org.lwjgl.opengl.GL11;
+import org.lwjgl.opengl.GL13;
 import org.lwjgl.opengl.GL15;
 import org.lwjgl.opengl.GL20;
 import org.lwjgl.opengl.GL30;
@@ -19,10 +20,10 @@ public class TestScene implements Scene {
 
 		GL11.glEnable(GL11.GL_DEPTH_TEST);
 		GL11.glDepthFunc(GL11.GL_LESS);
-		
+
 		GL11.glEnable(GL11.GL_BLEND);
 		GL11.glBlendFunc(GL11.GL_SRC_ALPHA, GL11.GL_ONE_MINUS_SRC_ALPHA);
-		
+
 		Texture texture = Texture.loadTexture("test.png");
 
 		ShaderProgram shader = ShaderFactory.createShader("test.vs", "test.fs");
@@ -52,6 +53,13 @@ public class TestScene implements Scene {
 
 			GL20.glUseProgram(shader.getId());
 
+			int textureLocation = GL20.glGetUniformLocation(shader.getId(),
+					"myTexture");
+			GL20.glUniform1i(textureLocation, 0);
+
+			GL13.glActiveTexture(GL13.GL_TEXTURE0);
+			texture.bind();
+
 			GL30.glBindVertexArray(vao);
 			GL20.glEnableVertexAttribArray(0);
 			GL20.glEnableVertexAttribArray(1);
@@ -69,8 +77,6 @@ public class TestScene implements Scene {
 
 			int mvp_id = GL20.glGetUniformLocation(shader.getId(), "MVP");
 			GL20.glUniformMatrix4fv(mvp_id, false, mat.getBuffer());
-			
-			texture.bind();
 
 			GL11.glDrawArrays(GL11.GL_TRIANGLES, 0, 6);
 			GL20.glDisableVertexAttribArray(0);
