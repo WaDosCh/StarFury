@@ -1,9 +1,11 @@
 #version 330 core
 
-in vec3 fragment_color;
+in vec2 fragment_tex;
 
-out vec3 color;
+uniform sampler2D text;
+
+out vec4 color;
 
 void main() {
-	color = fragment_color;
+	color = texture(text, fragment_tex);
 }
