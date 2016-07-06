@@ -26,6 +26,7 @@ import org.lwjgl.glfw.GLFW;
 import org.lwjgl.glfw.GLFWErrorCallback;
 import org.lwjgl.glfw.GLFWVidMode;
 import org.lwjgl.opengl.GL;
+import org.lwjgl.opengl.GL11;
 import org.lwjgl.opengl.GLCapabilities;
 
 public class Window {
@@ -75,8 +76,7 @@ public class Window {
 	}
 
 	public void openWindow() {
-		
-		
+
 		if (isOpened())
 			throw new IllegalStateException("Window is already opened");
 
@@ -104,7 +104,7 @@ public class Window {
 		// Get the resolution of the primary monitor
 		long monitor = glfwGetPrimaryMonitor();
 		GLFWVidMode vidmode = glfwGetVideoMode(monitor);
-		
+
 		// Create the window
 		this.window = glfwCreateWindow(vidmode.width(), vidmode.height(),
 				"StarFury v.0", monitor, NULL);
@@ -132,6 +132,12 @@ public class Window {
 			throw new IllegalStateException(
 					"This game requires openGl 3.0 to run");
 		}
+
+		GL11.glEnable(GL11.GL_DEPTH_TEST);
+		GL11.glDepthFunc(GL11.GL_LESS);
+
+		GL11.glEnable(GL11.GL_BLEND);
+		GL11.glBlendFunc(GL11.GL_SRC_ALPHA, GL11.GL_ONE_MINUS_SRC_ALPHA);
 	}
 
 	public boolean isClosing() {
@@ -145,6 +151,10 @@ public class Window {
 
 	public boolean isVSyncEnabled() {
 		return true;
+	}
+
+	public void clear() {
+		GL11.glClear(GL11.GL_COLOR_BUFFER_BIT | GL11.GL_DEPTH_BUFFER_BIT);
 	}
 
 }

@@ -1,23 +1,14 @@
 package ch.wados.starfury.math;
 
-import java.nio.FloatBuffer;
-import org.lwjgl.BufferUtils;
-
 public class Vector4f {
 
-	public float x;
-	public float y;
-	public float z;
-	public float w;
+	public final float[] comps;
 
 	/**
 	 * Creates a default 4-tuple vector with all values set to 0.
 	 */
 	public Vector4f() {
-		this.x = 0f;
-		this.y = 0f;
-		this.z = 0f;
-		this.w = 0f;
+		this.comps = new float[] { 0f, 0f, 0f, 0f };
 	}
 
 	/**
@@ -33,10 +24,7 @@ public class Vector4f {
 	 *            w value
 	 */
 	public Vector4f(float x, float y, float z, float w) {
-		this.x = x;
-		this.y = y;
-		this.z = z;
-		this.w = w;
+		this.comps = new float[] { x, y, z, w };
 	}
 
 	/**
@@ -45,7 +33,8 @@ public class Vector4f {
 	 * @return Squared length of this vector
 	 */
 	public float lengthSquared() {
-		return x * x + y * y + z * z + w * w;
+		return this.comps[0] * this.comps[0] + this.comps[1] * this.comps[1]
+				+ this.comps[2] * this.comps[2] + this.comps[3] * this.comps[3];
 	}
 
 	/**
@@ -76,10 +65,10 @@ public class Vector4f {
 	 * @return Sum of this + other
 	 */
 	public Vector4f add(Vector4f other) {
-		float x = this.x + other.x;
-		float y = this.y + other.y;
-		float z = this.z + other.z;
-		float w = this.w + other.w;
+		float x = this.comps[0] + other.comps[0];
+		float y = this.comps[1] + other.comps[1];
+		float z = this.comps[2] + other.comps[2];
+		float w = this.comps[3] + other.comps[3];
 		return new Vector4f(x, y, z, w);
 	}
 
@@ -113,10 +102,10 @@ public class Vector4f {
 	 * @return Scalar product of this * scalar
 	 */
 	public Vector4f scale(float scalar) {
-		float x = this.x * scalar;
-		float y = this.y * scalar;
-		float z = this.z * scalar;
-		float w = this.w * scalar;
+		float x = this.comps[0] * scalar;
+		float y = this.comps[1] * scalar;
+		float z = this.comps[2] * scalar;
+		float w = this.comps[3] * scalar;
 		return new Vector4f(x, y, z, w);
 	}
 
@@ -141,8 +130,9 @@ public class Vector4f {
 	 * @return Dot product of this * other
 	 */
 	public float dot(Vector4f other) {
-		return this.x * other.x + this.y * other.y + this.z * other.z
-				+ this.w * other.w;
+		return this.comps[0] * other.comps[0] + this.comps[1] * other.comps[1]
+				+ this.comps[2] * other.comps[2]
+				+ this.comps[3] * other.comps[3];
 	}
 
 	/**
@@ -158,18 +148,6 @@ public class Vector4f {
 	 */
 	public Vector4f lerp(Vector4f other, float alpha) {
 		return this.scale(1f - alpha).add(other.scale(alpha));
-	}
-
-	/**
-	 * Returns the Buffer representation of this vector.
-	 *
-	 * @return Vector as FloatBuffer
-	 */
-	public FloatBuffer getBuffer() {
-		FloatBuffer buffer = BufferUtils.createFloatBuffer(4);
-		buffer.put(x).put(y).put(z).put(w);
-		buffer.flip();
-		return buffer;
 	}
 
 }

@@ -32,11 +32,9 @@ public final class Texture {
 				0, GL11.GL_RGBA, GL11.GL_UNSIGNED_BYTE, data);
 	}
 
-	public void bind(int textureUnit) {
-		GL13.glActiveTexture(textureUnit);
-		this.bind();
-	}
-
+	/**
+	 * Binds the texture to the currently active texture unit.
+	 */
 	public void bind() {
 		GL11.glBindTexture(GL11.GL_TEXTURE_2D, this.id);
 	}

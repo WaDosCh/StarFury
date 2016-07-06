@@ -2,6 +2,7 @@
 package ch.wados.starfury.opengl;
 
 import org.lwjgl.opengl.GL11;
+import org.lwjgl.opengl.GL13;
 import org.lwjgl.opengl.GL20;
 import org.lwjgl.opengl.GL30;
 
@@ -73,7 +74,7 @@ public class Program {
 	}
 
 	public void setUniform(String name, Vector4f vector) {
-		GL20.glUniform4fv(getUniformLocation(name), vector.getBuffer());
+		GL20.glUniform4fv(getUniformLocation(name), vector.comps);
 	}
 
 	public void setUniform(String name, Matrix4f matrix) {
@@ -94,6 +95,14 @@ public class Program {
 
 	public void delete() {
 		GL20.glDeleteProgram(id);
+	}
+
+	public void bindTexture(Texture texture, String name, int textureUnit) {
+		assert textureUnit >= 0;
+		assert textureUnit < 32;
+		this.setUniform(name, textureUnit);
+		GL13.glActiveTexture(textureUnit + GL13.GL_TEXTURE0);
+		texture.bind();
 	}
 
 }

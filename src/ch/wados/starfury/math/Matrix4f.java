@@ -139,14 +139,15 @@ public class Matrix4f {
 	 * @return Vector product of this * other
 	 */
 	public Vector4f multiply(Vector4f vector) {
-		float x = this.m00 * vector.x + this.m01 * vector.y
-				+ this.m02 * vector.z + this.m03 * vector.w;
-		float y = this.m10 * vector.x + this.m11 * vector.y
-				+ this.m12 * vector.z + this.m13 * vector.w;
-		float z = this.m20 * vector.x + this.m21 * vector.y
-				+ this.m22 * vector.z + this.m23 * vector.w;
-		float w = this.m30 * vector.x + this.m31 * vector.y
-				+ this.m32 * vector.z + this.m33 * vector.w;
+		float vx = vector.comps[0];
+		float vy = vector.comps[1];
+		float vz = vector.comps[2];
+		float vw = vector.comps[3];
+
+		float x = this.m00 * vx + this.m01 * vy + this.m02 * vz + this.m03 * vw;
+		float y = this.m10 * vx + this.m11 * vy + this.m12 * vz + this.m13 * vw;
+		float z = this.m20 * vx + this.m21 * vy + this.m22 * vz + this.m23 * vw;
+		float w = this.m30 * vx + this.m31 * vy + this.m32 * vz + this.m33 * vw;
 		return new Vector4f(x, y, z, w);
 	}
 
