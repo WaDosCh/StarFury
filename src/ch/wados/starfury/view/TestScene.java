@@ -1,15 +1,10 @@
 package ch.wados.starfury.view;
 
-import org.lwjgl.opengl.GL11;
-import org.lwjgl.opengl.GL15;
-
 import ch.wados.starfury.controller.Scene;
 import ch.wados.starfury.controller.SceneManager;
 import ch.wados.starfury.math.Matrix4f;
 import ch.wados.starfury.opengl.Factory;
-import ch.wados.starfury.opengl.Program;
 import ch.wados.starfury.opengl.Texture;
-import ch.wados.starfury.opengl.VertexArray;
 
 public class TestScene implements Scene {
 
@@ -20,14 +15,9 @@ public class TestScene implements Scene {
 	public void enter(SceneManager manager) {
 		window = manager.getWindow();
 
-		float vertices[] = { -1, -1, 0, 1, -1, 0, 1, 1, 0, -1, -1, 0, 1, 1, 0,
-				-1, 1, 0 };
-		float text[] = { 0, 0, 1, 0, 1, 1, 0, 0, 1, 1, 0, 1 };
-
 		Texture texture = Factory.loadTexture("test.png");
-		Program shader = Factory.loadProgram("test");
-		VertexArray vao = new VertexArray(GL15.GL_STATIC_DRAW,
-				GL11.GL_TRIANGLES, 6, vertices, text);
+		SpriteRenderer sprite = new SpriteRenderer(1, 1, texture);
+		Matrix4f camera = Matrix4f.scale(.1f / aspectRatio, .1f, 1);
 
 		float ANGLE_STEP = .5f;
 		float angle = 0;
@@ -36,15 +26,17 @@ public class TestScene implements Scene {
 
 			window.clear();
 
-			Matrix4f matrix = getMatrix(angle);
+			Matrix4f matrix1 = getMatrix(angle);
+			Matrix4f matrix2 = Matrix4f.rotate(120, 0, 0, 1).multiply(matrix1);
+			Matrix4f matrix3 = Matrix4f.rotate(240, 0, 0, 1).multiply(matrix1);
 
-			shader.use();
-			shader.setUniform("MVP", matrix);
-			shader.bindTexture(texture, "myTexture", 0);
+			sprite.enable();
 
-			vao.bindAndEnable();
-			vao.draw();
-			vao.disable();
+			sprite.render(matrix1, camera);
+			sprite.render(matrix2, camera);
+			sprite.render(matrix3, camera);
+
+			sprite.disable();
 
 			window.update();
 
@@ -53,8 +45,7 @@ public class TestScene implements Scene {
 	}
 
 	private Matrix4f getMatrix(float angle) {
-		return Matrix4f.scale(.1f / aspectRatio, .1f, 1)
-				.multiply(Matrix4f.rotate(angle, 0, 0, 1))
+		return Matrix4f.rotate(angle, 0, 0, 1)
 				.multiply(Matrix4f.translate(5, 0, 0))
 				.multiply(Matrix4f.scale(2, 2, 1));
 	}
