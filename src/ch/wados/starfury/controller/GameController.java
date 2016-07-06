@@ -10,7 +10,6 @@ import ch.wados.starfury.model.Timer;
 import ch.wados.starfury.opengl.Factory;
 import ch.wados.starfury.opengl.Program;
 import ch.wados.starfury.physics.simple.SimplePhysicsManager;
-import silvertiger.tutorial.lwjgl.core.Game;
 
 public class GameController implements Scene {
 
@@ -124,8 +123,8 @@ public class GameController implements Scene {
 			try {
 				Thread.sleep(1);
 			} catch (InterruptedException ex) {
-				Logger.getLogger(Game.class.getName()).log(Level.SEVERE, null,
-						ex);
+				Logger.getLogger(this.getClass().getName()).log(Level.SEVERE,
+						null, ex);
 			}
 
 			now = timer.getTime();
