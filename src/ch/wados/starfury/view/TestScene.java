@@ -8,7 +8,10 @@ import org.lwjgl.opengl.GL30;
 
 import ch.wados.starfury.controller.Scene;
 import ch.wados.starfury.controller.SceneManager;
-import silvertiger.tutorial.lwjgl.math.Matrix4f;
+import ch.wados.starfury.math.Matrix4f;
+import ch.wados.starfury.opengl.Factory;
+import ch.wados.starfury.opengl.Program;
+import ch.wados.starfury.opengl.Texture;
 
 public class TestScene implements Scene {
 
@@ -24,9 +27,8 @@ public class TestScene implements Scene {
 		GL11.glEnable(GL11.GL_BLEND);
 		GL11.glBlendFunc(GL11.GL_SRC_ALPHA, GL11.GL_ONE_MINUS_SRC_ALPHA);
 
-		Texture texture = Texture.loadTexture("test.png");
-
-		ShaderProgram shader = ShaderFactory.createShader("test.vs", "test.fs");
+		Texture texture = Factory.loadTexture("test.png");
+		Program shader = Factory.loadProgram("test");
 
 		float vertices[] = { -1, -1, 0, 1, -1, 0, 1, 1, 0, -1, -1, 0, 1, 1, 0,
 				-1, 1, 0 };
@@ -51,14 +53,10 @@ public class TestScene implements Scene {
 
 			GL11.glClear(GL11.GL_COLOR_BUFFER_BIT | GL11.GL_DEPTH_BUFFER_BIT);
 
-			GL20.glUseProgram(shader.getId());
+			shader.use();
 
-			int textureLocation = GL20.glGetUniformLocation(shader.getId(),
-					"myTexture");
-			GL20.glUniform1i(textureLocation, 0);
-
-			GL13.glActiveTexture(GL13.GL_TEXTURE0);
-			texture.bind();
+			shader.setUniform("myTexture", 0);
+			texture.bind(GL13.GL_TEXTURE0);
 
 			GL30.glBindVertexArray(vao);
 			GL20.glEnableVertexAttribArray(0);
@@ -70,13 +68,12 @@ public class TestScene implements Scene {
 			GL15.glBindBuffer(GL15.GL_ARRAY_BUFFER, text_buffer);
 			GL20.glVertexAttribPointer(1, 2, GL11.GL_FLOAT, false, 0, 0);
 
-			Matrix4f mat = Matrix4f.scale(.1f / aspectRatio, .1f, 1)
+			Matrix4f matrix = Matrix4f.scale(.1f / aspectRatio, .1f, 1)
 					.multiply(Matrix4f.rotate(angle, 0, 0, 1))
 					.multiply(Matrix4f.translate(5, 0, 0))
 					.multiply(Matrix4f.scale(2, 2, 1));
 
-			int mvp_id = GL20.glGetUniformLocation(shader.getId(), "MVP");
-			GL20.glUniformMatrix4fv(mvp_id, false, mat.getBuffer());
+			shader.setUniform("MVP", matrix);
 
 			GL11.glDrawArrays(GL11.GL_TRIANGLES, 0, 6);
 			GL20.glDisableVertexAttribArray(0);

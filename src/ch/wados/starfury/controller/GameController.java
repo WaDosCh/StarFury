@@ -6,14 +6,11 @@ import java.util.logging.Logger;
 import org.dyn4j.geometry.Vector2;
 import org.lwjgl.opengl.GL11;
 
-import silvertiger.tutorial.lwjgl.core.Game;
-import silvertiger.tutorial.lwjgl.math.Matrix4f;
 import ch.wados.starfury.model.Timer;
+import ch.wados.starfury.opengl.Factory;
+import ch.wados.starfury.opengl.Program;
 import ch.wados.starfury.physics.simple.SimplePhysicsManager;
-import ch.wados.starfury.view.ShaderFactory;
-import ch.wados.starfury.view.ShaderProgram;
-import ch.wados.starfury.view.SpriteRenderer;
-import ch.wados.starfury.view.Texture;
+import silvertiger.tutorial.lwjgl.core.Game;
 
 public class GameController implements Scene {
 
@@ -35,18 +32,14 @@ public class GameController implements Scene {
 
 	}
 
-	private ShaderProgram shader;
-	private SpriteRenderer renderer;
+	private Program shader;
 
 	@Override
 	public void enter(SceneManager manager) {
 		this.manager = manager;
 		this.physicsManager.initialiseWorld(new Vector2(0, 0));
 
-		this.shader = ShaderFactory.createShader("texture_vertex.vs",
-				"texture_fragment.fs");
-		this.renderer = new SpriteRenderer(Texture.loadTexture("test.png"),
-				shader, 100f, 100f);
+		this.shader = Factory.loadProgram("texture");
 
 		this.loop();
 	}
@@ -98,8 +91,6 @@ public class GameController implements Scene {
 	private void render() {
 		GL11.glClear(GL11.GL_COLOR_BUFFER_BIT);
 		GL11.glClear(GL11.GL_DEPTH_BUFFER_BIT);
-
-		this.renderer.render(new Matrix4f(), new Matrix4f());
 
 		this.manager.getWindow().update();
 
