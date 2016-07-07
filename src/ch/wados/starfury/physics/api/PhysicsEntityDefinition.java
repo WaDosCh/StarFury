@@ -134,7 +134,7 @@ public final class PhysicsEntityDefinition implements Lockable {
 
 	public PhysicsEntityDefinition setOrientation(double orientation) {
 		this.enforceLock();
-		this.orientation = ch.waan.math.Math.normalizedAngle(orientation);
+		this.orientation = ch.wados.math.Math.normalizedAngle(orientation);
 		return this;
 	}
 

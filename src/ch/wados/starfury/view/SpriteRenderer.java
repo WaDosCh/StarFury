@@ -3,11 +3,11 @@ package ch.wados.starfury.view;
 import org.lwjgl.opengl.GL11;
 import org.lwjgl.opengl.GL15;
 
-import ch.wados.starfury.math.Matrix4f;
 import ch.wados.starfury.opengl.Factory;
 import ch.wados.starfury.opengl.Program;
 import ch.wados.starfury.opengl.Texture;
 import ch.wados.starfury.opengl.VertexArray;
+import ch.wados.vecmath.Matrix4f;
 
 public class SpriteRenderer implements PrimitiveRenderer {
 

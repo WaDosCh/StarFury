@@ -1,6 +1,6 @@
 package ch.wados.starfury.view;
 
-import ch.wados.starfury.math.Matrix4f;
+import ch.wados.vecmath.Matrix4f;
 
 public interface PrimitiveRenderer {
 
@@ -9,7 +9,7 @@ public interface PrimitiveRenderer {
 	void render(Matrix4f model, Matrix4f camera);
 
 	void disable();
-	
+
 	void destroy();
 
 }

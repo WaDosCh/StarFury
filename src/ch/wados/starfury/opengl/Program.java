@@ -6,8 +6,8 @@ import org.lwjgl.opengl.GL13;
 import org.lwjgl.opengl.GL20;
 import org.lwjgl.opengl.GL30;
 
-import ch.wados.starfury.math.Matrix4f;
-import ch.wados.starfury.math.Vector4f;
+import ch.wados.vecmath.Matrix4f;
+import ch.wados.vecmath.Vector4f;
 
 public class Program {
 
@@ -79,7 +79,7 @@ public class Program {
 
 	public void setUniform(String name, Matrix4f matrix) {
 		GL20.glUniformMatrix4fv(getUniformLocation(name), false,
-				matrix.getBuffer());
+				matrix.getGLArray());
 	}
 
 	public void use() {

@@ -2,9 +2,9 @@ package ch.wados.starfury.view;
 
 import ch.wados.starfury.controller.Scene;
 import ch.wados.starfury.controller.SceneManager;
-import ch.wados.starfury.math.Matrix4f;
 import ch.wados.starfury.opengl.Factory;
 import ch.wados.starfury.opengl.Texture;
+import ch.wados.vecmath.Matrix4f;
 
 public class TestScene implements Scene {
 
