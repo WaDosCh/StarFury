@@ -54,7 +54,7 @@ public class TestScene implements Scene {
 
 	@Override
 	public void enter(SceneManager manager) {
-		window = manager.getWindow();
+		this.window = manager.getWindow();
 
 		try {
 			setup();
@@ -86,14 +86,13 @@ public class TestScene implements Scene {
 	long lastTime = System.nanoTime();
 
 	void update() {
-		projMatrix.setPerspective((float) Math.toRadians(30),
-				(float) width / height, 0.01f, 50.0f);
+		projMatrix.setPerspective((float) Math.toRadians(30), (float) width
+				/ height, 0.01f, 50.0f);
 		long thisTime = System.nanoTime();
 		float diff = (thisTime - lastTime) / 1E9f;
 		angle += diff;
-		viewMatrix
-				.setLookAt(0.0f, 2.0f, 5.0f, 0.0f, 0.0f, 0.0f, 0.0f, 1.0f, 0.0f)
-				.rotateY(angle);
+		viewMatrix.setLookAt(0.0f, 2.0f, 5.0f, 0.0f, 0.0f, 0.0f, 0.0f, 1.0f,
+				0.0f).rotateY(angle);
 		lastTime = thisTime;
 	}
 
@@ -142,8 +141,7 @@ public class TestScene implements Scene {
 		glUseProgram(this.program);
 		viewMatrixUniform = glGetUniformLocation(this.program, "viewMatrix");
 		projMatrixUniform = glGetUniformLocation(this.program, "projMatrix");
-		viewportSizeUniform = glGetUniformLocation(this.program,
-				"viewportSize");
+		viewportSizeUniform = glGetUniformLocation(this.program, "viewportSize");
 		glUseProgram(0);
 	}
 
