@@ -2,7 +2,7 @@ package ch.wados.starfury;
 
 import ch.wados.starfury.controller.Scene;
 import ch.wados.starfury.controller.SceneManager;
-import ch.wados.starfury.controller.TestScene;
+import ch.wados.starfury.view.TestScene;
 import ch.wados.starfury.view.Window;
 
 public class GameLauncher {
